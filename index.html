@@ -413,7 +413,7 @@ details>summary:before{content:"✦";margin-right:8px;color:#62d7ff}
 
 <label>협력사명 <input type="text" id="son_company" value="SK오앤에스" oninput="generateImage()"></label>
 <label>도급사명 <input type="text" id="mother_company" value="창원품질개선팀" oninput="generateImage()"></label>
-<label>일시 <input type="datetime-local" id="date" oninput="generateImage()"></label>
+<label>일시 <span style="font-size:10px;color:#78dfff;font-weight:900;margin-left:6px">● LIVE</span><input type="datetime-local" id="date" oninput="generateImage()"></label>
 <label>국소명 <input type="text" id="location" placeholder="국소명 직접 입력" oninput="generateImage()"></label>
 <label>작업공종 <input type="text" id="what_do" oninput="generateImage()"></label>
 <label>투입인원 <input type="text" id="inspector" oninput="generateImage()"></label>
@@ -851,9 +851,15 @@ function setCurrentDateTime() {
 
   const formatted = `${yyyy}-${mm}-${dd}T${hh}:${min}`;
   const dateInput = document.getElementById('date');
-  if (dateInput) {
+
+  if (dateInput && dateInput.value !== formatted) {
     dateInput.value = formatted;
+    dateInput.dispatchEvent(new Event('input', { bubbles:true }));
+    dateInput.dispatchEvent(new Event('change', { bubbles:true }));
+    if (typeof generateImage === 'function') generateImage();
   }
+
+  return formatted;
 }
 
 function getDisplayDateTime() {
@@ -1233,10 +1239,11 @@ function showInstallGuide() {
   }
 
   function formContext(){
-    const ids=['location','what_do','inspector','son_company','mother_company','special_note',
+    const ids=['date','location','what_do','inspector','son_company','mother_company','special_note',
       'danger_ect_point','danger_ect_todo','fake_temperature','real_temperature','region_display'];
     const o={};
     ids.forEach(id=>{const e=document.getElementById(id); if(e) o[id]=e.value||'';});
+    o.assessment_datetime = o.date || '';
     o.weather = {
       source:'기상청 초단기실황',
       region:o.region_display || '',
@@ -1320,6 +1327,7 @@ function showInstallGuide() {
 14. 새로운 value, 임의의 항목명, 비슷한 표현을 만들어내지 마세요. 반드시 아래 목록의 value를 그대로 사용하세요.
 15. 최종 결과는 보조판단이며 실제 현장 확인이 필요합니다.
 16. 현재 작업/현장 입력값의 weather는 기상청 실황 기반 정보입니다. 기온과 체감온도를 안전안내 및 특이사항 판단에 반영하되, 날씨 정보만으로 사진에 보이지 않는 별도 위험요인을 임의 생성하지 마세요.
+17. assessment_datetime은 AI 분석 버튼을 누른 시점의 실시간 일시입니다. 현장 기록의 기준 시각으로 사용하세요.
 
 [현재 작업/현장 입력값]
 ${JSON.stringify(context,null,2)}
@@ -1414,7 +1422,10 @@ ${JSON.stringify(items,null,2)}
     resultBox.style.display='block';
     resultBox.innerHTML='<b>🤖 AI 분석 진행 중</b><br>사진의 객관적 사실과 기존 평가표 항목을 대조하고 있습니다.';
     try{
-      status.textContent='🌡️ 현재 위치 기상청 실황을 먼저 확인하고 있습니다...';
+      // AI 분석 요청 시점의 실제 일시를 평가표와 AI 컨텍스트에 즉시 반영
+      const liveDateTime = setCurrentDateTime();
+
+      status.textContent='🕒 '+liveDateTime.replace('T',' ')+' · 기상청 실황 확인 중...';
       const weatherNow = await setWeatherAndTemperature({forceRefresh:true, forAI:true});
 
       if(weatherNow?.ok){
@@ -1786,6 +1797,29 @@ input[type="checkbox"]{width:22px!important;height:22px!important;min-width:22px
 }
 @media(prefers-reduced-motion:reduce){.aix-topbar:before,.aix-live i{animation:none!important}}
 </style>
+
+
+<script>
+/* ===== 실시간 일시 자동 반영 ===== */
+(function(){
+  function syncLiveDateTime(){
+    try { setCurrentDateTime(); } catch(e) { console.warn('일시 자동반영 오류:', e); }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', syncLiveDateTime, { once:true });
+  } else {
+    syncLiveDateTime();
+  }
+
+  setInterval(syncLiveDateTime, 15000);
+
+  window.addEventListener('focus', syncLiveDateTime);
+  document.addEventListener('visibilitychange', function(){
+    if (!document.hidden) syncLiveDateTime();
+  });
+})();
+</script>
 
 </body>
 </html>
