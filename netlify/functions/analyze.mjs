@@ -1,7 +1,7 @@
 // netlify/functions/analyze.mjs
 
 const GEMINI_MODEL =
-  process.env.GEMINI_MODEL || "gemini-2.5-flash-lite";
+  process.env.GEMINI_MODEL || "gemini-3.5-flash-lite";
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
