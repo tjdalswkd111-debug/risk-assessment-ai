@@ -228,7 +228,23 @@ details>summary:before{content:"✦";margin-right:8px;color:#62d7ff}
 
 <body>
 
-<!-- ================= 무료 ChatGPT 사진 분석 : 정확도 강화 버전 ================= -->
+<div class="aix-topbar" aria-label="AI 안전 평가 시스템">
+  <div class="aix-brand-row">
+    <div class="aix-brandmark" aria-hidden="true"><span></span><span></span><span></span></div>
+    <div class="aix-brandcopy">
+      <div class="aix-kicker">AI SAFETY COPILOT</div>
+      <div class="aix-brandtitle">현장 위험성평가 <em>VISION</em></div>
+      <div class="aix-brandsub">사진 기반 위험 감지 · 신뢰도 검증 · 평가표 자동 반영</div>
+    </div>
+    <div class="aix-live"><i></i> AI READY</div>
+  </div>
+  <div class="aix-metrics" aria-hidden="true">
+    <span><b>VISION</b> PHOTO</span><span><b>80%+</b> AUTO</span><span><b>50–79%</b> REVIEW</span>
+  </div>
+</div>
+
+
+
 <style>
 #chatgpt-ai-panel{margin:12px 0 18px;padding:14px;border:2px solid #2563eb;border-radius:12px;background:#eff6ff}
 #chatgpt-ai-panel .ai-title{font-size:18px;font-weight:900;color:#1e3a8a;margin-bottom:7px}
@@ -245,47 +261,153 @@ details>summary:before{content:"✦";margin-right:8px;color:#62d7ff}
 .ai-good{color:#166534}.ai-warn{color:#92400e}.ai-muted{color:#475569}
 </style>
 
+<style>
+/* ===== AI 현장분석 패널 · 간결형 ===== */
+#chatgpt-ai-panel{
+  margin:14px 0 18px!important;
+  padding:18px!important;
+  border:1px solid rgba(99,190,255,.28)!important;
+  border-radius:24px!important;
+  background:
+    radial-gradient(circle at 8% 0%,rgba(57,210,255,.16),transparent 34%),
+    radial-gradient(circle at 100% 100%,rgba(127,103,255,.13),transparent 35%),
+    linear-gradient(145deg,#071426,#0b1b31 58%,#111b3c)!important;
+  box-shadow:0 18px 55px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.05)!important;
+  color:#eef8ff!important;
+}
+#chatgpt-ai-panel .ai-head{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px
+}
+#chatgpt-ai-panel .ai-head-main{display:flex;align-items:center;gap:10px;min-width:0}
+#chatgpt-ai-panel .ai-orb{
+  width:42px;height:42px;border-radius:15px;flex:0 0 42px;
+  background:linear-gradient(145deg,#46ddff,#786dff);
+  box-shadow:0 0 28px rgba(70,221,255,.35);
+  display:grid;place-items:center;font-size:20px
+}
+#chatgpt-ai-panel .ai-title{
+  margin:0!important;color:#f2fbff!important;font-size:18px!important;font-weight:950!important;
+  letter-spacing:-.45px
+}
+#chatgpt-ai-panel .ai-kicker{
+  margin-top:2px;font-size:11px;color:#8ca9c5;font-weight:800;letter-spacing:.12em
+}
+#chatgpt-ai-panel .ai-live{
+  white-space:nowrap;padding:7px 10px;border-radius:999px;
+  border:1px solid rgba(79,231,165,.26);background:rgba(79,231,165,.09);
+  color:#7bf0b4;font-size:11px;font-weight:900
+}
+#chatgpt-ai-panel .ai-photo-actions{
+  display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:4px
+}
+#chatgpt-ai-panel .ai-btn{
+  min-height:50px!important;border-radius:15px!important;font-size:14px!important;font-weight:900!important;
+  border:1px solid rgba(255,255,255,.08)!important;box-shadow:none!important
+}
+#chatgpt-ai-panel .ai-camera{background:linear-gradient(135deg,#145ea8,#1e7bd0)!important}
+#chatgpt-ai-panel .ai-add{background:linear-gradient(135deg,#223b61,#2d4773)!important}
+#chatgpt-ai-panel #ai-photo-preview-free{
+  display:flex;flex-wrap:wrap;gap:8px;margin-top:11px
+}
+#chatgpt-ai-panel .ai-thumb{
+  width:82px;height:82px;border-radius:14px!important;border:1px solid rgba(87,211,255,.4)!important;
+  background:#091629!important;object-fit:cover
+}
+#chatgpt-ai-panel #ai-free-status{
+  margin:10px 0 0!important;padding:10px 12px;border-radius:13px;
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);
+  color:#adc0d5!important;font-size:12px!important;line-height:1.5!important
+}
+#chatgpt-ai-panel .ai-weather-strip{
+  margin:10px 0 0;padding:11px 12px;border-radius:14px;
+  background:linear-gradient(135deg,rgba(37,198,255,.08),rgba(123,104,255,.07));
+  border:1px solid rgba(98,215,255,.16);
+  display:flex;gap:10px;align-items:center
+}
+#chatgpt-ai-panel .ai-weather-icon{
+  width:34px;height:34px;border-radius:12px;background:rgba(98,215,255,.1);
+  display:grid;place-items:center;flex:0 0 34px
+}
+#chatgpt-ai-panel .ai-weather-text{min-width:0}
+#chatgpt-ai-panel .ai-weather-label{font-size:10px;color:#7f9ab7;font-weight:850;letter-spacing:.08em}
+#chatgpt-ai-panel #ai-weather-status{font-size:12px;color:#d7edff;font-weight:800;margin-top:2px;line-height:1.4}
+#chatgpt-ai-panel .ai-run{
+  width:100%;margin-top:11px!important;min-height:58px!important;
+  background:linear-gradient(135deg,#23c8ff 0%,#5a85ff 48%,#806cff 100%)!important;
+  color:white!important;border:0!important;border-radius:17px!important;
+  box-shadow:0 12px 30px rgba(49,135,255,.24)!important;font-size:15px!important
+}
+#chatgpt-ai-panel .ai-reset{
+  width:100%;margin-top:8px;min-height:42px!important;border-radius:13px!important;
+  background:rgba(255,255,255,.045)!important;color:#9fb6cc!important;
+  border:1px solid rgba(255,255,255,.07)!important;font-size:12px!important
+}
+#chatgpt-ai-panel #ai-free-result{
+  margin-top:10px!important;padding:11px 12px!important;border-radius:14px!important;
+  background:rgba(255,255,255,.045)!important;border:1px solid rgba(111,191,255,.14)!important;
+  color:#d8eaff!important;font-size:12px!important;line-height:1.55!important
+}
+@media(max-width:560px){
+  #chatgpt-ai-panel{padding:14px!important;border-radius:20px!important}
+  #chatgpt-ai-panel .ai-photo-actions{grid-template-columns:1fr 1fr}
+  #chatgpt-ai-panel .ai-title{font-size:17px!important}
+}
+</style>
+
 <div id="chatgpt-ai-panel">
-  <div class="ai-title">🤖 AI 현장사진 위험성평가 · ONE TOUCH SERVER</div>
-  <div class="ai-help">
-    API Key는 <b>서버 환경변수에만 보관</b>하며 HTML에는 저장하지 않습니다. <b>사진의 확인 가능한 증거를 기준으로만</b> 기존 평가표 항목을 판단합니다.
-    사진에서 확인할 수 없는 보호조치·고정상태 등은 단정하지 않고 <b>현장 재확인 필요</b>로 처리합니다.
-  </div>
-  <div class="ai-rule">
-    <b>분석 순서</b> 사진 사실 추출 → 항목 연결 → 근거 검증 → 신뢰도 산정 → 자동체크/검토 분리<br>
-    <b>자동체크 기준</b><br>
-    🟢 신뢰도 <b>80~100%</b> → 자동 체크 &nbsp;|&nbsp;
-    🟠 <b>50~79%</b> → 검토 후보만 표시 &nbsp;|&nbsp;
-    ⚪ <b>0~49%</b> → 자동 체크하지 않음
+  <div class="ai-head">
+    <div class="ai-head-main">
+      <div class="ai-orb">✦</div>
+      <div>
+        <div class="ai-title">AI 현장 위험 분석</div>
+        <div class="ai-kicker">VISION SAFETY COPILOT</div>
+      </div>
+    </div>
+    <div class="ai-live">● AI READY</div>
   </div>
 
   <input id="ai-camera-free" type="file" accept="image/*" capture="environment" style="display:none">
   <input id="ai-gallery-free" type="file" accept="image/*" multiple style="display:none">
-  <div class="ai-btn-row">
-    <button type="button" class="ai-btn ai-camera" id="ai-camera-btn">📷 카메라 촬영</button>
-    <button type="button" class="ai-btn ai-add" id="ai-gallery-btn">🖼️ 사진 추가</button>
+
+  <div class="ai-photo-actions">
+    <button type="button" class="ai-btn ai-camera" id="ai-camera-btn">📷 현장 촬영</button>
+    <button type="button" class="ai-btn ai-add" id="ai-gallery-btn">＋ 사진 추가</button>
   </div>
+
   <div id="ai-photo-preview-free" aria-label="현장 사진 미리보기"></div>
-  <div id="ai-free-status">현장 전체가 보이는 사진을 1장 이상 촬영해 주세요. 필요하면 위험부위 근접사진을 추가하세요. (최대 5장)</div>
+  <div id="ai-free-status">현장 사진을 1장 이상 촬영해 주세요. 최대 5장까지 분석합니다.</div>
 
-  <div class="ai-btn-row">
-    <button type="button" class="ai-btn ai-share" id="ai-share-btn">⚡ AI 정확도 분석 · 자동 반영</button>
-  <div class="ai-automation"><b>⚡ 서버 원터치 자동화</b><br>사진 촬영 후 위 버튼 한 번으로 <b>사진 전송 → AI 분석 → JSON 검증 → 신뢰도 80% 이상 자동 체크 → 요약/안전조치/특이사항 반영 → 결과 이미지 갱신</b>까지 실행합니다.</div>
+  <div class="ai-weather-strip">
+    <div class="ai-weather-icon">☁</div>
+    <div class="ai-weather-text">
+      <div class="ai-weather-label">KMA LIVE WEATHER</div>
+      <div id="ai-weather-status">AI 분석 요청 시 현재 위치의 기온·체감온도를 자동 조회합니다.</div>
+    </div>
   </div>
 
-  <div style="margin-top:12px;font-weight:800">📥 AI 분석 결과 자동 반영</div>
-  <div style="font-size:12px;color:#64748b;margin-top:4px;line-height:1.5">
-    Gemini 분석 결과가 자동으로 입력됩니다. <b>80% 이상 항목만 자동 체크</b>하고 50~79% 항목은 검토 후보로만 표시합니다. 아래 입력창은 오류 확인/수동 재반영용입니다.
-  </div>
-  <textarea id="ai-result-json" placeholder='{"selected_values":[{"value":"risk_fall","confidence":92,"reason":"사진 오른쪽의 높은 작업 위치가 확인됨"}],"review_values":[{"value":"risk_electric","confidence":65,"reason":"전기설비는 보이나 감전 위험 상태는 사진만으로 확인 불가"}],"guidance":"...","special_note":"..."}'></textarea>
-  <div class="ai-btn-row">
-    <button type="button" class="ai-btn ai-import" id="ai-import-btn">✅ 신뢰도 기준 자동 체크</button>
-    <button type="button" class="ai-btn ai-clear" id="ai-clear-btn">🗑️ 초기화</button>
-  </div>
+  <button type="button" class="ai-btn ai-run" id="ai-share-btn">⚡ AI 위험 분석 · 자동 반영</button>
+  <button type="button" class="ai-btn ai-reset" id="ai-clear-btn">↺ 분석 초기화</button>
+
+  <!-- 자동화 코드 호환용: 화면에는 노출하지 않음 -->
+  <textarea id="ai-result-json" style="display:none"></textarea>
+  <button type="button" id="ai-import-btn" style="display:none">분석 결과 적용</button>
+
   <div id="ai-free-result"></div>
 </div>
 
-<h2>현장 위험성 평가표 작성</h2>
+
+<style>
+.aix-weather-location{
+  display:flex;gap:10px;align-items:center;margin:8px 0 12px;padding:10px 12px;
+  border:1px solid rgba(99,190,255,.15);border-radius:14px;background:rgba(255,255,255,.025)
+}
+.aix-weather-location-label{font-size:11px;font-weight:900;color:#7f9ab7;white-space:nowrap}
+.aix-weather-location #region_display{
+  flex:1!important;margin:0!important;min-height:38px!important;background:rgba(255,255,255,.035)!important;
+  color:#dbeeff!important;border:1px solid rgba(99,190,255,.12)!important;border-radius:10px!important
+}
+</style>
+<h2>현장 입력 · 위험성평가</h2>
 
 <div class="form">
 
@@ -326,15 +448,9 @@ details>summary:before{content:"✦";margin-right:8px;color:#62d7ff}
 <label>체감온도 <input type="text" id="fake_temperature" oninput="updateSpecialNoteByTemp(); generateImage()"></label>
 <label>기온 <input type="text" id="real_temperature" oninput="generateImage()"></label>
 
-<!-- 현재위치 날씨 및 지역 조회 버튼 -->
-<div style="display: flex; gap: 10px; margin-bottom: 10px; width: 100%;">
-  
-  <button type="button" onclick="setWeatherAndTemperature()" style="flex: 1; padding: 10px; cursor: pointer; background-color: #28a745; color: white; border: none; border-radius: 4px; font-weight: bold;">
-    현재위치 날씨 및 지역 조회
-  </button>
-
+<div class="aix-weather-location">
+  <span class="aix-weather-location-label">현재 위치</span>
   <input type="text" id="region_display" readonly placeholder="지역명이 표시됩니다" style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 4px; background-color: #f0f0f0;">
-  
 </div>
 
 <details>
@@ -745,171 +861,224 @@ function getDisplayDateTime() {
   if (!val) return '';
   return val.replace('T', '  ');
 }
-function setWeatherAndTemperature() {
-  if (!navigator.geolocation) {
-      console.warn("이 브라우저에서는 위치 정보(Geolocation)를 지원하지 않습니다.");
-      return;
-  }
+function setWeatherAndTemperature(options = {}) {
+  const forceRefresh = typeof options === "boolean" ? options : !!options.forceRefresh;
+  const forAI = typeof options === "object" && !!options.forAI;
 
-  // 브라우저 권한 요청 및 위치 가져오기
-    const regionBox = document.getElementById("region_display");
+  const regionBox = document.getElementById("region_display");
   const realTempBox = document.getElementById("real_temperature");
   const fakeTempBox = document.getElementById("fake_temperature");
-  if (regionBox) regionBox.value = "위치 확인 중...";
-  if (realTempBox) realTempBox.value = "기온 조회 중...";
-  if (fakeTempBox) fakeTempBox.value = "체감온도 조회 중...";
+  const aiWeatherBox = document.getElementById("ai-weather-status");
 
-  const geoOptions = { enableHighAccuracy: false, timeout: 5000, maximumAge: 300000 };
-  navigator.geolocation.getCurrentPosition((position) => {
-    const lat = position.coords.latitude;
-    const lon = position.coords.longitude;
+  const setAiWeather = (message) => {
+    if (aiWeatherBox) aiWeatherBox.textContent = message;
+  };
 
-    // 1. 주소 조회 (Nominatim API)
-    // 1. 주소 조회 (Nominatim API) - 기상청 API와 병렬 실행을 위해 비동기 프로미스로 변경 (속도 개선)
-    fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&accept-language=ko`)
-      .then(res => res.json())
+  if (!navigator.geolocation) {
+    setAiWeather("위치 기능을 지원하지 않아 기존 기온값으로 분석합니다.");
+    return Promise.resolve({ ok:false, reason:"geolocation_unsupported" });
+  }
+
+  if (forAI) setAiWeather("현재 위치 확인 → 기상청 실황 조회 중...");
+  if (regionBox && !regionBox.value) regionBox.value = "위치 확인 중...";
+  if (realTempBox && !realTempBox.value) realTempBox.value = "기온 조회 중...";
+  if (fakeTempBox && !fakeTempBox.value) fakeTempBox.value = "체감온도 조회 중...";
+
+  const KMA_API_KEY = "ef069b758e2be326a0fddf819b18d153f0127733e00bf2ce246b77f5798ed898";
+
+  function getKmaGrid(lat, lon) {
+    const RE = 6371.00877, GRID = 5.0, SLAT1 = 30.0, SLAT2 = 60.0;
+    const OLON = 126.0, OLAT = 38.0, XO = 43, YO = 136;
+    const DEGRAD = Math.PI / 180.0, re = RE / GRID;
+    const slat1 = SLAT1 * DEGRAD, slat2 = SLAT2 * DEGRAD;
+    const olon = OLON * DEGRAD, olat = OLAT * DEGRAD;
+
+    let sn = Math.tan(Math.PI * 0.25 + slat2 * 0.5) / Math.tan(Math.PI * 0.25 + slat1 * 0.5);
+    sn = Math.log(Math.cos(slat1) / Math.cos(slat2)) / Math.log(sn);
+    let sf = Math.tan(Math.PI * 0.25 + slat1 * 0.5);
+    sf = Math.pow(sf, sn) * Math.cos(slat1) / sn;
+    let ro = Math.tan(Math.PI * 0.25 + olat * 0.5);
+    ro = re * sf / Math.pow(ro, sn);
+    let ra = Math.tan(Math.PI * 0.25 + lat * DEGRAD * 0.5);
+    ra = re * sf / Math.pow(ra, sn);
+    let theta = lon * DEGRAD - olon;
+    if (theta > Math.PI) theta -= 2.0 * Math.PI;
+    if (theta < -Math.PI) theta += 2.0 * Math.PI;
+    theta *= sn;
+
+    return {
+      nx: Math.floor(ra * Math.sin(theta) + XO + 0.5),
+      ny: Math.floor(ro - ra * Math.cos(theta) + YO + 0.5)
+    };
+  }
+
+  function getBaseDateTime() {
+    const now = new Date();
+    // 초단기실황은 정시 자료가 API에 반영되기까지 시차가 있으므로 40분 이전에는 전 시간 자료 사용
+    if (now.getMinutes() < 40) now.setHours(now.getHours() - 1);
+    return {
+      base_date: `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}`,
+      base_time: `${String(now.getHours()).padStart(2, '0')}00`
+    };
+  }
+
+  // 기존 페이지에서 사용하던 기상청 계절별 체감온도 계산 방식 유지
+  function calculateApparentTemp(temp, humidity, windSpeed) {
+    const month = new Date().getMonth() + 1;
+    let apparent = temp;
+
+    if (month >= 5 && month <= 9 && Number.isFinite(humidity)) {
+      const tw = temp * Math.atan(0.151977 * Math.pow(humidity + 8.313659, 0.5))
+               + Math.atan(temp + humidity)
+               - Math.atan(humidity - 1.676331)
+               + 0.00391838 * Math.pow(humidity, 1.5) * Math.atan(0.023101 * humidity)
+               - 4.686035;
+      apparent = -0.2442 + 0.55399 * tw + 0.45535 * temp
+               - 0.0022 * Math.pow(tw, 2) + 0.00278 * tw * temp + 3.0;
+    } else if (month < 5 || month > 9) {
+      const v = Number.isFinite(windSpeed) ? windSpeed * 3.6 : 0;
+      if (temp <= 10 && v >= 4.8) {
+        apparent = 13.12 + 0.6215 * temp - 11.37 * Math.pow(v, 0.16)
+                 + 0.3965 * Math.pow(v, 0.16) * temp;
+      }
+    }
+    return Number(apparent).toFixed(1);
+  }
+
+  return new Promise((resolve) => {
+    const geoOptions = { enableHighAccuracy:false, timeout:7000, maximumAge:120000 };
+
+    navigator.geolocation.getCurrentPosition(async (position) => {
+      const lat = position.coords.latitude;
+      const lon = position.coords.longitude;
+      const { nx, ny } = getKmaGrid(lat, lon);
+
+      // 위치 문자열은 날씨 호출과 병렬 처리해 분석 대기시간을 줄임
+      const regionPromise = fetch(
+        `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&accept-language=ko`
+      )
+      .then(res => res.ok ? res.json() : null)
       .then(addrData => {
-        if (addrData.display_name) {
-          let parts = addrData.display_name.split(',').map(p => p.trim());
-          let validParts = parts.filter(p => 
-              p !== '대한민국' && 
-              p !== '남한' && 
-              !/^\d+(-?\d+)?$/.test(p) && 
-              !p.toLowerCase().includes('korea')
-          );
-          validParts.reverse();
-          let addrToShow = validParts.slice(0, 3).join(' ');
-          const regionBox = document.getElementById("region_display");
-          if (regionBox) regionBox.value = addrToShow;
-          if (typeof generateImage === "function") generateImage();
-        }
+        if (!addrData?.display_name) return "";
+        let parts = addrData.display_name.split(',').map(p => p.trim());
+        let validParts = parts.filter(p =>
+          p !== '대한민국' &&
+          p !== '남한' &&
+          !/^\d+(-?\d+)?$/.test(p) &&
+          !p.toLowerCase().includes('korea')
+        );
+        validParts.reverse();
+        const addrToShow = validParts.slice(0, 3).join(' ');
+        if (regionBox) regionBox.value = addrToShow;
+        return addrToShow;
       })
-      .catch(e => console.error("주소 조회 오류:", e));
+      .catch(() => "");
 
-    // 2. 기상청 API 인증키 및 유틸리티 (기상청 실황 데이터 + 공식 산출식 적용)
-    
-    // 2. 기상청 API 인증키 및 유틸리티 (기상청 실황 데이터 + 공식 산출식 적용)
-    
-    // 캐시 확인 로직
-    const cached = sessionStorage.getItem("cachedWeather");
-    if (cached) {
-        const data = JSON.parse(cached);
-        if (realTempBox) realTempBox.value = data.temp + "°C";
-        if (fakeTempBox) fakeTempBox.value = data.apparentTemp + "°C";
+      try {
+        // 일반 화면 조회는 최근 캐시를 허용하되, AI 분석 요청은 매번 최신 실황으로 갱신
+        const cachedRaw = sessionStorage.getItem("cachedWeather");
+        if (!forceRefresh && cachedRaw) {
+          try {
+            const cached = JSON.parse(cachedRaw);
+            const fresh = cached.timestamp && (Date.now() - cached.timestamp < 10 * 60 * 1000);
+            const sameGrid = cached.nx === nx && cached.ny === ny;
+            if (fresh && sameGrid && Number.isFinite(cached.temp)) {
+              const region = await regionPromise;
+              if (realTempBox) realTempBox.value = `${cached.temp}°C`;
+              if (fakeTempBox) fakeTempBox.value = `${cached.apparentTemp}°C`;
+              setAiWeather(`${region ? region + " · " : ""}기온 ${cached.temp}°C · 체감 ${cached.apparentTemp}°C`);
+              if (typeof updateSpecialNoteByTemp === "function") updateSpecialNoteByTemp();
+              if (typeof generateImage === "function") generateImage();
+              return resolve({
+                ok:true, cached:true, region,
+                temperature:cached.temp,
+                apparent_temperature:cached.apparentTemp,
+                humidity:cached.humidity ?? null,
+                wind_speed:cached.windSpeed ?? null,
+                source:"기상청 초단기실황"
+              });
+            }
+          } catch (_) {}
+        }
+
+        const { base_date, base_time } = getBaseDateTime();
+        const kmaUrl =
+          `https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst` +
+          `?serviceKey=${KMA_API_KEY}&pageNo=1&numOfRows=1000&dataType=JSON` +
+          `&base_date=${base_date}&base_time=${base_time}&nx=${nx}&ny=${ny}`;
+
+        const res = await fetch(kmaUrl, { cache:"no-store" });
+        if (!res.ok) throw new Error(`기상청 HTTP ${res.status}`);
+
+        const weatherData = await res.json();
+        if (weatherData?.response?.header?.resultCode !== "00") {
+          throw new Error(weatherData?.response?.header?.resultMsg || "기상청 응답 오류");
+        }
+
+        const items = weatherData?.response?.body?.items?.item || [];
+        let temp = null, humidity = null, windSpeed = null;
+
+        items.forEach(item => {
+          const value = parseFloat(item.obsrValue);
+          if (item.category === "T1H" && Number.isFinite(value)) temp = value;
+          if (item.category === "REH" && Number.isFinite(value)) humidity = value;
+          if (item.category === "WSD" && Number.isFinite(value)) windSpeed = value;
+        });
+
+        if (!Number.isFinite(temp)) throw new Error("기온 자료 없음");
+
+        const apparentTemp = calculateApparentTemp(temp, humidity, windSpeed);
+        const region = await regionPromise;
+
+        sessionStorage.setItem("cachedWeather", JSON.stringify({
+          timestamp:Date.now(), nx, ny, temp, apparentTemp, humidity, windSpeed
+        }));
+
+        if (realTempBox) realTempBox.value = `${temp}°C`;
+        if (fakeTempBox) fakeTempBox.value = `${apparentTemp}°C`;
+
+        setAiWeather(`${region ? region + " · " : ""}기온 ${temp}°C · 체감 ${apparentTemp}°C`);
+
         if (typeof updateSpecialNoteByTemp === "function") updateSpecialNoteByTemp();
         if (typeof generateImage === "function") generateImage();
-        console.log("캐시된 날씨 데이터를 사용합니다.");
-        // 캐시가 있으면 기상청 API 호출을 건너뜀
-        return;
-    }
-    
-    const KMA_API_KEY = "ef069b758e2be326a0fddf819b18d153f0127733e00bf2ce246b77f5798ed898";
 
-
-    function getKmaGrid(lat, lon) {
-      const RE = 6371.00877, GRID = 5.0, SLAT1 = 30.0, SLAT2 = 60.0;
-      const OLON = 126.0, OLAT = 38.0, XO = 43, YO = 136;
-      const DEGRAD = Math.PI / 180.0, re = RE / GRID;
-      const slat1 = SLAT1 * DEGRAD, slat2 = SLAT2 * DEGRAD;
-      const olon = OLON * DEGRAD, olat = OLAT * DEGRAD;
-
-      let sn = Math.tan(Math.PI * 0.25 + slat2 * 0.5) / Math.tan(Math.PI * 0.25 + slat1 * 0.5);
-      sn = Math.log(Math.cos(slat1) / Math.cos(slat2)) / Math.log(sn);
-      let sf = Math.tan(Math.PI * 0.25 + slat1 * 0.5);
-      sf = Math.pow(sf, sn) * Math.cos(slat1) / sn;
-      let ro = Math.tan(Math.PI * 0.25 + olat * 0.5);
-      ro = re * sf / Math.pow(ro, sn);
-      let ra = Math.tan(Math.PI * 0.25 + lat * DEGRAD * 0.5);
-      ra = re * sf / Math.pow(ra, sn);
-      let theta = lon * DEGRAD - olon;
-      if (theta > Math.PI) theta -= 2.0 * Math.PI;
-      if (theta < -Math.PI) theta += 2.0 * Math.PI;
-      theta *= sn;
-
-      return {
-        nx: Math.floor(ra * Math.sin(theta) + XO + 0.5),
-        ny: Math.floor(ro - ra * Math.cos(theta) + YO + 0.5)
-      };
-    }
-
-    function getBaseDateTime() {
-      const now = new Date();
-      if (now.getMinutes() < 40) now.setHours(now.getHours() - 1);
-      return {
-        base_date: `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}`,
-        base_time: `${String(now.getHours()).padStart(2, '0')}00`
-      };
-    }
-
-    // 기상청 공식 체감온도 산출 공식 (여름철/겨울철 분리 적용)
-    function calculateApparentTemp(temp, humidity, windSpeed) {
-      const month = new Date().getMonth() + 1; // 1~12월
-      let apparent = temp;
-
-      if (month >= 5 && month <= 9) {
-        // [여름철 (5월~9월)] 습도 중심 공식 (기상청 하절기 체감온도)
-        const tw = temp * Math.atan(0.151977 * Math.pow(humidity + 8.313659, 0.5)) 
-                 + Math.atan(temp + humidity) 
-                 - Math.atan(humidity - 1.676331) 
-                 + 0.00391838 * Math.pow(humidity, 1.5) * Math.atan(0.023101 * humidity) 
-                 - 4.686035;
-        apparent = -0.2442 + 0.55399 * tw + 0.45535 * temp - 0.0022 * Math.pow(tw, 2) + 0.00278 * tw * temp + 3.0;
-      } else {
-        // [겨울철 (10월~4월)] 풍속 중심 공식 (기상청 동절기 체감온도 - 체감온도지수)
-        const v = windSpeed * 3.6; // m/s 를 km/h 로 변환
-        if (temp <= 10 && v >= 4.8) {
-          apparent = 13.12 + 0.6215 * temp - 11.37 * Math.pow(v, 0.16) + 0.3965 * Math.pow(v, 0.16) * temp;
-        } else {
-           // 기온이 10도 초과이거나 바람이 거의 안 불면 기온과 체감온도가 거의 동일
-           apparent = temp;
-        }
+        resolve({
+          ok:true, cached:false, region,
+          temperature:temp,
+          apparent_temperature:apparentTemp,
+          humidity,
+          wind_speed:windSpeed,
+          source:"기상청 초단기실황",
+          base_date,
+          base_time,
+          nx, ny
+        });
+      } catch (err) {
+        const region = await regionPromise;
+        console.error("기상청 날씨 조회 오류:", err);
+        setAiWeather("기상청 실황 조회 실패 · 기존 입력값으로 AI 분석을 계속합니다.");
+        resolve({
+          ok:false,
+          region,
+          reason:String(err?.message || err),
+          temperature:realTempBox?.value || "",
+          apparent_temperature:fakeTempBox?.value || ""
+        });
       }
-      return apparent.toFixed(1);
-    }
-
-    // 3. 기상청 초단기실황 API 호출 및 화면 적용
-    try {
-      const { nx, ny } = getKmaGrid(lat, lon);
-      const { base_date, base_time } = getBaseDateTime();
-      
-      const kmaUrl = `https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst?serviceKey=${KMA_API_KEY}&pageNo=1&numOfRows=1000&dataType=JSON&base_date=${base_date}&base_time=${base_time}&nx=${nx}&ny=${ny}`;
-
-      fetch(kmaUrl)
-        .then(res => res.json())
-        .then(weatherData => {
-          if (weatherData.response && weatherData.response.header.resultCode === "00") {
-            const items = weatherData.response.body.items.item;
-            let temp = 0, humidity = 0, windSpeed = 0;
-
-            items.forEach(item => {
-              if (item.category === "T1H") temp = parseFloat(item.obsrValue); // 기온
-              if (item.category === "REH") humidity = parseFloat(item.obsrValue); // 습도
-              if (item.category === "WSD") windSpeed = parseFloat(item.obsrValue); // 풍속
-            });
-
-            // 추출한 데이터로 체감온도 계산 적용
-            const apparentTemp = calculateApparentTemp(temp, humidity, windSpeed);
-
-            const realTempBox = document.getElementById("real_temperature");
-            const fakeTempBox = document.getElementById("fake_temperature");
-            
-            // 조회된 데이터를 세션 스토리지에 캐싱 (탭 종료 시 사라짐)
-            sessionStorage.setItem("cachedWeather", JSON.stringify({ temp, apparentTemp }));
-            
-            if (realTempBox) realTempBox.value = temp + "°C";
-            if (fakeTempBox) fakeTempBox.value = apparentTemp + "°C";
-            
-            if (typeof updateSpecialNoteByTemp === "function") updateSpecialNoteByTemp();
-            if (typeof generateImage === "function") generateImage();
-          } else {
-            console.error("기상청 API 응답 오류:", weatherData);
-          }
-        })
-        .catch(err => console.error("날씨 조회 fetch 오류:", err));
-    } catch (err) {
-      console.error("날씨 조회 로직 오류:", err);
-    } }, (err) => { console.error("위치 가져오기 오류:", err.code); }, { enableHighAccuracy: false, timeout: 5000, maximumAge: 300000 });
+    }, (err) => {
+      console.error("위치 가져오기 오류:", err.code, err.message);
+      setAiWeather("위치 권한 확인 필요 · 기존 기온값으로 AI 분석을 계속합니다.");
+      resolve({
+        ok:false,
+        reason:"geolocation_error",
+        code:err.code,
+        temperature:realTempBox?.value || "",
+        apparent_temperature:fakeTempBox?.value || ""
+      });
+    }, geoOptions);
+  });
 }
+
 </script>
 
 <script>
@@ -1068,6 +1237,12 @@ function showInstallGuide() {
       'danger_ect_point','danger_ect_todo','fake_temperature','real_temperature','region_display'];
     const o={};
     ids.forEach(id=>{const e=document.getElementById(id); if(e) o[id]=e.value||'';});
+    o.weather = {
+      source:'기상청 초단기실황',
+      region:o.region_display || '',
+      temperature:o.real_temperature || '',
+      apparent_temperature:o.fake_temperature || ''
+    };
     o.currently_checked = allowedItems().filter(x=>x.currently_checked).map(x=>x.value);
     return o;
   }
@@ -1144,6 +1319,7 @@ function showInstallGuide() {
 13. 현재 이미 체크된 항목은 참고만 하며, 사진 근거가 없다고 해서 기존 체크를 해제하라고 하지 마세요.
 14. 새로운 value, 임의의 항목명, 비슷한 표현을 만들어내지 마세요. 반드시 아래 목록의 value를 그대로 사용하세요.
 15. 최종 결과는 보조판단이며 실제 현장 확인이 필요합니다.
+16. 현재 작업/현장 입력값의 weather는 기상청 실황 기반 정보입니다. 기온과 체감온도를 안전안내 및 특이사항 판단에 반영하되, 날씨 정보만으로 사진에 보이지 않는 별도 위험요인을 임의 생성하지 마세요.
 
 [현재 작업/현장 입력값]
 ${JSON.stringify(context,null,2)}
@@ -1228,16 +1404,25 @@ ${JSON.stringify(items,null,2)}
 
   function setAiBusy(busy){
     shareBtn.disabled=busy;
-    shareBtn.textContent=busy?'⏳ AI 분석 중...':'⚡ AI 정확도 분석 · 자동 반영';
+    shareBtn.textContent=busy?'⏳ AI 분석 중...':'⚡ AI 위험 분석 · 자동 반영';
   }
 
-  async function shareToChatGPT(){
+  async function runAiRiskAnalysis(){
     if(!photoFiles.length){alert('먼저 현장 사진을 촬영하거나 선택해 주세요.');return;}
     setAiBusy(true);
     status.textContent='⏳ 사진 최적화 → 서버 전송 → AI 정확도 분석 중입니다...';
     resultBox.style.display='block';
     resultBox.innerHTML='<b>🤖 AI 분석 진행 중</b><br>사진의 객관적 사실과 기존 평가표 항목을 대조하고 있습니다.';
     try{
+      status.textContent='🌡️ 현재 위치 기상청 실황을 먼저 확인하고 있습니다...';
+      const weatherNow = await setWeatherAndTemperature({forceRefresh:true, forAI:true});
+
+      if(weatherNow?.ok){
+        status.textContent=`🌡️ 기온 ${weatherNow.temperature}°C · 체감 ${weatherNow.apparent_temperature}°C 확인 완료\n⏳ 사진 최적화 → AI 위험 분석 중...`;
+      }else{
+        status.textContent='⚠️ 실시간 날씨를 불러오지 못해 기존 기온값으로 AI 분석을 계속합니다.';
+      }
+
       const prepared=await prepareShareFiles();
       const images=[];
       for(const f of prepared) images.push(await fileToDataURL(f));
@@ -1267,7 +1452,7 @@ ${JSON.stringify(items,null,2)}
     }finally{ setAiBusy(false); }
   }
 
-  shareBtn.addEventListener('click',shareToChatGPT);
+  shareBtn.addEventListener('click',runAiRiskAnalysis);
 
   function parseJSON(text){
     let t=(text||'').trim();
@@ -1404,6 +1589,203 @@ ${JSON.stringify(items,null,2)}
   });
 })();
 </script>
+
+
+<style id="aix-full-redesign">
+/* =========================================================
+   AI SAFETY COPILOT — FULL UI REDESIGN
+   Visual-only override. Existing IDs, values and JS remain intact.
+   ========================================================= */
+:root{
+  --aix-bg:#050914;
+  --aix-bg2:#081222;
+  --aix-panel:rgba(10,19,36,.88);
+  --aix-panel2:rgba(14,26,48,.92);
+  --aix-card:rgba(255,255,255,.045);
+  --aix-line:rgba(118,203,255,.18);
+  --aix-line-strong:rgba(102,221,255,.42);
+  --aix-cyan:#66ddff;
+  --aix-blue:#5b8cff;
+  --aix-violet:#a77cff;
+  --aix-mint:#55e6b2;
+  --aix-warn:#ffc866;
+  --aix-danger:#ff6f91;
+  --aix-text:#f4f8ff;
+  --aix-muted:#9db0c8;
+  --aix-shadow:0 18px 55px rgba(0,0,0,.28);
+}
+*{box-sizing:border-box}
+html{background:var(--aix-bg);scroll-behavior:smooth}
+body{
+  max-width:none!important;
+  margin:0!important;
+  padding:18px 14px calc(46px + env(safe-area-inset-bottom))!important;
+  color:var(--aix-text)!important;
+  background:
+    radial-gradient(circle at 8% -5%,rgba(82,190,255,.16),transparent 30%),
+    radial-gradient(circle at 100% 8%,rgba(163,111,255,.14),transparent 32%),
+    linear-gradient(180deg,#050914 0%,#07101d 42%,#050914 100%)!important;
+  font-family:-apple-system,BlinkMacSystemFont,"Noto Sans KR","Malgun Gothic",sans-serif!important;
+  min-height:100vh;
+  color-scheme:dark;
+}
+body:before,body:after{
+  content:"";position:fixed;z-index:-1;pointer-events:none;border-radius:50%;filter:blur(80px);opacity:.32
+}
+body:before{width:260px;height:260px;background:#2cc9ff;left:-150px;top:28vh}
+body:after{width:280px;height:280px;background:#8f63ff;right:-180px;top:54vh}
+
+/* masthead */
+.aix-topbar{
+  width:min(900px,100%);margin:0 auto 16px;padding:17px 17px 14px;
+  border:1px solid var(--aix-line);border-radius:24px;
+  background:linear-gradient(145deg,rgba(12,25,47,.96),rgba(9,17,34,.96));
+  box-shadow:var(--aix-shadow),inset 0 1px 0 rgba(255,255,255,.06);position:relative;overflow:hidden
+}
+.aix-topbar:before{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 0 32%,rgba(102,221,255,.08) 46%,transparent 61%);transform:translateX(-70%);animation:aixSweep 8s ease-in-out infinite;pointer-events:none}
+@keyframes aixSweep{0%,58%{transform:translateX(-78%)}82%,100%{transform:translateX(78%)}}
+.aix-brand-row{display:flex;gap:12px;align-items:center;position:relative;z-index:1}
+.aix-brandmark{width:46px;height:46px;min-width:46px;border-radius:15px;border:1px solid rgba(102,221,255,.32);background:linear-gradient(145deg,rgba(102,221,255,.15),rgba(167,124,255,.11));display:grid;place-items:center;grid-template-columns:repeat(3,5px);gap:3px;box-shadow:0 0 24px rgba(91,140,255,.14)}
+.aix-brandmark span{width:5px;border-radius:5px;background:linear-gradient(180deg,var(--aix-cyan),var(--aix-violet));box-shadow:0 0 8px rgba(102,221,255,.45)}
+.aix-brandmark span:nth-child(1){height:13px}.aix-brandmark span:nth-child(2){height:24px}.aix-brandmark span:nth-child(3){height:17px}
+.aix-brandcopy{min-width:0;flex:1}
+.aix-kicker{font-size:10px;letter-spacing:.18em;color:var(--aix-cyan);font-weight:900;margin-bottom:2px}
+.aix-brandtitle{font-size:22px;line-height:1.12;font-weight:950;letter-spacing:-.7px;color:#fff}
+.aix-brandtitle em{font-style:normal;color:var(--aix-cyan);text-shadow:0 0 18px rgba(102,221,255,.28)}
+.aix-brandsub{font-size:11px;color:var(--aix-muted);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.aix-live{font-size:10px;font-weight:900;color:#dfffee;border:1px solid rgba(85,230,178,.26);background:rgba(85,230,178,.08);border-radius:999px;padding:7px 9px;white-space:nowrap}
+.aix-live i{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--aix-mint);box-shadow:0 0 10px var(--aix-mint);margin-right:5px;animation:aixPulse 1.8s ease-in-out infinite}
+@keyframes aixPulse{50%{opacity:.38;box-shadow:0 0 2px var(--aix-mint)}}
+.aix-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:13px;position:relative;z-index:1}
+.aix-metrics span{border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.035);border-radius:11px;padding:8px 6px;text-align:center;font-size:9px;color:#7f93ad;letter-spacing:.05em}
+.aix-metrics b{display:block;color:#dfeaff;font-size:11px;margin-bottom:1px;letter-spacing:0}
+
+/* global content widths */
+#chatgpt-ai-panel,body>h2,.form,#result-container,.iphone-notice{width:min(900px,100%)!important;max-width:900px!important;margin-left:auto!important;margin-right:auto!important}
+body>h2{font-size:18px!important;margin:20px auto 10px!important;padding:0 3px!important;color:#f5f8ff!important;letter-spacing:-.45px}
+body>h2:before{content:"// ";color:var(--aix-cyan);font-weight:900}
+
+/* AI command panel */
+#chatgpt-ai-panel{
+  position:relative!important;overflow:hidden!important;margin-top:0!important;margin-bottom:17px!important;padding:17px!important;
+  border:1px solid rgba(102,221,255,.28)!important;border-radius:24px!important;
+  background:linear-gradient(145deg,rgba(9,24,45,.96),rgba(14,22,47,.97) 62%,rgba(20,17,50,.96))!important;
+  box-shadow:0 22px 65px rgba(0,0,0,.32),inset 0 1px 0 rgba(255,255,255,.06)!important
+}
+#chatgpt-ai-panel:before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 4% 0%,rgba(102,221,255,.18),transparent 30%),radial-gradient(circle at 100% 100%,rgba(167,124,255,.14),transparent 34%)}
+#chatgpt-ai-panel>*{position:relative;z-index:1}
+#chatgpt-ai-panel .ai-title{font-size:19px!important;line-height:1.25!important;font-weight:950!important;letter-spacing:-.55px!important;color:#fff!important;margin:0 0 8px!important}
+#chatgpt-ai-panel .ai-title:before{content:"◈ ";color:var(--aix-cyan);text-shadow:0 0 16px rgba(102,221,255,.4)}
+#chatgpt-ai-panel .ai-help{font-size:12px!important;color:#aebdd2!important;line-height:1.65!important;margin-bottom:11px!important}
+#chatgpt-ai-panel .ai-help b{color:#e8f3ff!important}
+.ai-rule{border:1px solid rgba(102,221,255,.13)!important;background:rgba(4,12,25,.42)!important;color:#aebdd2!important;border-radius:16px!important;padding:11px 12px!important;margin:10px 0 12px!important;font-size:11px!important;line-height:1.7!important}
+.ai-rule b{color:#e8f2ff!important}
+.ai-good{color:var(--aix-mint)!important}.ai-warn{color:var(--aix-warn)!important}.ai-muted{color:#8498b2!important}
+.ai-btn-row{display:flex!important;gap:9px!important;margin-top:9px!important}
+.ai-btn{min-height:52px!important;border-radius:15px!important;border:1px solid rgba(255,255,255,.08)!important;font-weight:900!important;font-size:14px!important;letter-spacing:-.25px!important;box-shadow:0 8px 24px rgba(0,0,0,.19)!important;transition:.16s transform,.16s filter,.16s border-color!important;color:white!important}
+.ai-btn:active{transform:scale(.985)!important}
+.ai-camera{background:linear-gradient(135deg,#0d668f,#2757b7)!important}
+.ai-add{background:linear-gradient(135deg,#293c64,#4b3f88)!important}
+.ai-share{background:linear-gradient(120deg,#19bfe5,#536fff 55%,#9b63ff)!important;border:0!important;box-shadow:0 12px 30px rgba(69,117,255,.28)!important}
+.ai-share:after{content:"  ◇"!important;font-size:15px!important}
+.ai-import{background:linear-gradient(135deg,#19a77d,#2ebd9a)!important}
+.ai-clear{background:rgba(255,255,255,.055)!important;color:#bccbe0!important}
+#ai-photo-preview-free{display:flex!important;flex-wrap:wrap!important;gap:9px!important;margin:12px 0 0!important}
+.ai-thumb{width:92px!important;height:92px!important;border-radius:16px!important;border:1px solid rgba(102,221,255,.35)!important;background:#08111e!important;box-shadow:0 7px 18px rgba(0,0,0,.22)!important}
+#ai-free-status{margin-top:10px!important;padding:10px 11px!important;border:1px solid rgba(102,221,255,.1)!important;background:rgba(2,10,21,.30)!important;border-radius:13px!important;color:#9fb2ca!important;font-size:12px!important;line-height:1.55!important}
+.ai-automation{margin:11px 0 0!important;padding:11px 12px!important;border-radius:14px!important;background:rgba(85,230,178,.055)!important;border:1px solid rgba(85,230,178,.16)!important;color:#a9bdd1!important;font-size:11px!important;line-height:1.55!important}
+.ai-automation b{color:#dfffee!important}
+#ai-result-json{width:100%!important;min-height:145px!important;margin-top:8px!important;padding:12px!important;border:1px solid rgba(102,221,255,.14)!important;border-radius:15px!important;background:#050c17!important;color:#cce9ff!important;font:11px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace!important;box-shadow:inset 0 0 0 1px rgba(255,255,255,.015)!important}
+#ai-result-json:focus{outline:none!important;border-color:rgba(102,221,255,.55)!important;box-shadow:0 0 0 3px rgba(102,221,255,.08)!important}
+#ai-free-result{margin-top:10px!important;padding:12px!important;background:rgba(4,12,25,.72)!important;border:1px solid rgba(167,124,255,.22)!important;border-radius:15px!important;color:#d9e6f5!important;font-size:12px!important;line-height:1.6!important}
+
+/* form foundation */
+.form{display:flex!important;flex-direction:column!important;gap:10px!important;padding:0 0 25px!important;background:transparent!important}
+.form>label{
+  display:block!important;margin:0!important;padding:12px 13px!important;border:1px solid var(--aix-line)!important;border-radius:16px!important;
+  background:linear-gradient(145deg,rgba(12,23,42,.92),rgba(9,18,34,.92))!important;color:#dce8f7!important;
+  font-size:12px!important;font-weight:850!important;letter-spacing:-.15px!important;box-shadow:0 8px 26px rgba(0,0,0,.15)!important
+}
+input[type="text"],input[type="date"],input[type="datetime-local"],input[type="number"],textarea,select{
+  width:100%!important;margin-top:7px!important;min-height:46px!important;padding:10px 11px!important;border:1px solid rgba(139,171,210,.20)!important;border-radius:12px!important;
+  background:rgba(2,9,18,.72)!important;color:#f0f6ff!important;font-size:14px!important;outline:none!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.02)!important
+}
+input::placeholder,textarea::placeholder{color:#60728a!important}
+input:focus,textarea:focus,select:focus{border-color:rgba(102,221,255,.58)!important;box-shadow:0 0 0 3px rgba(102,221,255,.08)!important}
+input[readonly]{color:#9ec9dc!important;background:rgba(7,23,35,.64)!important}
+
+/* section cards */
+details,main details,.assessment-section,.risk-section{
+  border:1px solid var(--aix-line)!important;border-radius:18px!important;background:linear-gradient(145deg,rgba(11,21,39,.91),rgba(8,16,31,.94))!important;
+  overflow:hidden!important;margin:0!important;box-shadow:0 9px 28px rgba(0,0,0,.16)!important
+}
+details>summary,.assessment-section>summary,.risk-section>summary{
+  min-height:54px!important;margin:0!important;padding:15px 15px!important;display:flex!important;align-items:center!important;justify-content:space-between!important;
+  border:0!important;border-bottom:1px solid rgba(255,255,255,.045)!important;border-radius:0!important;
+  background:linear-gradient(90deg,rgba(102,221,255,.07),rgba(167,124,255,.035))!important;color:#eef6ff!important;
+  font-size:15px!important;font-weight:950!important;letter-spacing:-.25px!important;list-style:none!important
+}
+details>summary:before{content:"◆"!important;font-size:9px!important;color:var(--aix-cyan)!important;margin-right:9px!important;text-shadow:0 0 12px rgba(102,221,255,.42)!important}
+details>summary::after,.assessment-section>summary::after{content:"＋"!important;color:#7ccfff!important;font-size:20px!important;margin-left:auto!important}
+details[open]>summary::after,.assessment-section[open]>summary::after{content:"−"!important}
+.checkbox-group,.assessment-section .checkbox-group{
+  display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important;margin:0!important;padding:11px!important;border:0!important;background:transparent!important
+}
+.checkbox-group label,.assessment-section .checkbox-group label{
+  min-height:52px!important;margin:0!important;padding:10px 11px!important;display:flex!important;flex-direction:row!important;align-items:center!important;gap:8px!important;
+  border:1px solid rgba(133,170,211,.13)!important;border-radius:13px!important;background:rgba(255,255,255,.028)!important;color:#b9c9dc!important;
+  font-size:12px!important;font-weight:760!important;line-height:1.4!important;box-shadow:none!important;transition:.16s border-color,.16s background,.16s transform!important
+}
+.checkbox-group label:active{transform:scale(.99)!important}
+.checkbox-group label:has(input:checked),.assessment-section .checkbox-group label:has(input:checked){
+  border-color:rgba(102,221,255,.55)!important;background:linear-gradient(135deg,rgba(102,221,255,.12),rgba(91,140,255,.08))!important;color:#effbff!important;box-shadow:inset 0 0 0 1px rgba(102,221,255,.05),0 0 20px rgba(63,172,255,.07)!important
+}
+input[type="checkbox"]{width:22px!important;height:22px!important;min-width:22px!important;margin:0!important;accent-color:#58d9ff!important;filter:drop-shadow(0 0 3px rgba(102,221,255,.22))}
+.etc-input,.assessment-section .etc-input{margin:0!important;padding:0 11px 11px!important;background:transparent!important;border:0!important}
+
+/* risk hierarchy */
+.parent-group{margin:9px 10px!important;padding:10px!important;border:1px solid rgba(255,255,255,.07)!important;border-radius:15px!important;background:rgba(255,255,255,.025)!important;box-shadow:none!important}
+.parent-label{min-height:48px!important;margin:0 0 8px!important;padding:10px 11px!important;display:flex!important;flex-direction:row!important;align-items:center!important;gap:8px!important;border:1px solid rgba(255,200,102,.14)!important;border-radius:12px!important;background:linear-gradient(90deg,rgba(255,200,102,.055),rgba(255,111,145,.025))!important;color:#f2e6d1!important;font-size:13px!important;font-weight:900!important}
+.parent-label:has(input:checked){border-color:rgba(255,200,102,.48)!important;background:linear-gradient(90deg,rgba(255,200,102,.12),rgba(255,111,145,.06))!important}
+.parent-group>.checkbox-group{padding:0!important;grid-template-columns:1fr!important}
+
+/* general buttons incl. inline-style legacy buttons */
+.form button:not(.ai-btn),body>button,.save-btn{
+  min-height:48px!important;border:1px solid rgba(102,221,255,.16)!important;border-radius:14px!important;background:linear-gradient(135deg,#163f67,#334d8d)!important;color:#fff!important;font-weight:900!important;font-size:13px!important;box-shadow:0 8px 22px rgba(0,0,0,.18)!important
+}
+.save-btn{width:100%!important;margin-top:2px!important;min-height:54px!important;background:linear-gradient(120deg,#0fa98b,#2489bf 52%,#596ef2)!important;border:0!important;font-size:15px!important}
+.form>button[onclick*="showInstallGuide"]{width:100%!important;margin-top:0!important;background:rgba(255,255,255,.045)!important;border-color:rgba(167,124,255,.18)!important;color:#c8d5e7!important}
+
+/* signature modal */
+#signModal{backdrop-filter:blur(8px)!important;background:rgba(1,5,12,.80)!important}
+#signModal>div{background:linear-gradient(145deg,#0c182c,#091321)!important;border:1px solid rgba(102,221,255,.22)!important;border-radius:20px!important;color:#eef6ff!important;box-shadow:0 25px 70px rgba(0,0,0,.48)!important;padding:15px!important}
+#signCanvas{width:100%!important;max-width:100%!important;background:#fff!important;border:0!important;border-radius:12px!important}
+
+/* result image */
+#result-container{margin-top:14px!important;padding:13px!important;border:1px solid var(--aix-line)!important;border-radius:20px!important;background:rgba(9,18,34,.82)!important;box-shadow:var(--aix-shadow)!important}
+#final-image{display:block!important;width:100%!important;height:auto!important;border:1px solid rgba(255,255,255,.12)!important;border-radius:13px!important;background:#fff!important;box-shadow:0 12px 30px rgba(0,0,0,.28)!important}
+.iphone-notice{color:#8ba0ba!important;font-size:10px!important;margin:8px auto!important}
+
+/* scrollbars */
+*{scrollbar-width:thin;scrollbar-color:#315372 #091321}
+
+@media(max-width:640px){
+  body{padding:10px 9px calc(34px + env(safe-area-inset-bottom))!important}
+  .aix-topbar{border-radius:20px;padding:14px 13px 12px;margin-bottom:10px}
+  .aix-brandmark{width:42px;height:42px;min-width:42px}
+  .aix-brandtitle{font-size:19px}.aix-brandsub{font-size:10px}
+  .aix-live{padding:6px 7px;font-size:9px}
+  .aix-metrics{gap:5px;margin-top:10px}.aix-metrics span{padding:7px 3px;font-size:8px}.aix-metrics b{font-size:10px}
+  #chatgpt-ai-panel{padding:14px!important;border-radius:20px!important}
+  .ai-btn-row{flex-direction:column!important}.ai-btn{width:100%!important;flex:none!important}
+  .checkbox-group,.assessment-section .checkbox-group{grid-template-columns:1fr!important}
+  .form{gap:8px!important}
+  .form>label{border-radius:14px!important;padding:11px!important}
+  details,.assessment-section,.risk-section{border-radius:15px!important}
+  .ai-thumb{width:82px!important;height:82px!important}
+}
+@media(prefers-reduced-motion:reduce){.aix-topbar:before,.aix-live i{animation:none!important}}
+</style>
 
 </body>
 </html>
