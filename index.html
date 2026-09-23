@@ -1248,13 +1248,16 @@ ${JSON.stringify(items,null,2)}
       const response=await fetch('/.netlify/functions/analyze',{
         method:'POST',
         headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({prompt:makePrompt(),images})
+        body:JSON.stringify({
+  prompt:makePrompt(),
+  images,
+  allowed_items:allowedItems()
+})
       });
       const data=await response.json().catch(()=>({}));
       if(!response.ok) throw new Error(data.error||`서버 오류 (${response.status})`);
-      if(!data.result) throw new Error('AI 분석 결과가 비어 있습니다.');
-      resultText.value=data.result;
-      resultText.dispatchEvent(new Event('input',{bubbles:true}));
+      resultText.value=JSON.stringify(data,null,2);
+resultText.dispatchEvent(new Event('input',{bubbles:true}));
       status.textContent='✅ AI 분석 완료. 신뢰도 기준으로 자동 반영합니다...';
       document.getElementById('ai-import-btn').click();
       document.querySelectorAll('.ai-stage div').forEach(el=>el.classList.add('on'));
