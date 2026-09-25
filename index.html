@@ -11,26 +11,21 @@
 
 <meta name="theme-color" content="#06101d">
 <style id="aix-critical-boot">
-html,body{background:#06101d!important;min-height:100%}
-body{transition:background-color .45s ease}
-body.app-booting{margin:0!important;max-width:none!important;overflow:hidden!important}
-body.app-booting>*:not(#aix-splash){opacity:0!important;transform:translateY(10px) scale(.992);filter:blur(2px);pointer-events:none!important}
-body.app-ready>*:not(#aix-splash){opacity:1!important;transform:none;filter:none;transition:opacity .58s cubic-bezier(.22,.8,.24,1),transform .58s cubic-bezier(.22,.8,.24,1),filter .48s ease}
-#aix-splash{position:fixed;inset:0;z-index:2147483647;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 34%,rgba(42,196,255,.15),transparent 31%),radial-gradient(circle at 66% 72%,rgba(116,91,255,.13),transparent 35%),linear-gradient(155deg,#050c16 0%,#071526 52%,#0b1531 100%);color:#edf9ff;opacity:1;transform:scale(1);filter:blur(0);will-change:opacity,transform,filter;transition:opacity .62s cubic-bezier(.22,.8,.24,1),transform .62s cubic-bezier(.22,.8,.24,1),filter .52s ease}
-#aix-splash.aix-hide{opacity:0;transform:scale(1.025);filter:blur(5px);pointer-events:none}
-#aix-splash .aix-splash-core{width:min(78vw,320px);text-align:center;transition:transform .45s cubic-bezier(.22,.8,.24,1),opacity .38s ease}
-#aix-splash.aix-hide .aix-splash-core{transform:translateY(-8px) scale(.985);opacity:.15}
-#aix-splash .aix-splash-orbit{width:88px;height:88px;margin:0 auto 18px;border-radius:28px;position:relative;display:grid;place-items:center;background:linear-gradient(145deg,rgba(43,207,255,.16),rgba(119,94,255,.18));border:1px solid rgba(105,216,255,.3);box-shadow:0 0 52px rgba(44,185,255,.18),inset 0 0 24px rgba(255,255,255,.025)}
-#aix-splash .aix-splash-orbit:before{content:"";position:absolute;inset:-7px;border-radius:32px;border:1px solid rgba(89,207,255,.15);border-top-color:#58dcff;border-right-color:#776cff;animation:aixBootSpin 1.25s linear infinite}
-#aix-splash .aix-splash-orbit:after{content:"";width:34px;height:34px;border-radius:50%;background:radial-gradient(circle,#c8f6ff 0 7%,#55dfff 13%,rgba(85,223,255,.16) 42%,transparent 70%);box-shadow:0 0 34px rgba(85,223,255,.7)}
-#aix-splash .aix-splash-kicker{font-size:10px;letter-spacing:.22em;font-weight:900;color:#6edfff}
-#aix-splash .aix-splash-title{margin-top:7px;font-size:21px;font-weight:950;letter-spacing:-.65px}
-#aix-splash .aix-splash-sub{margin-top:6px;font-size:11px;color:#8da7c1;font-weight:700}
-#aix-splash .aix-splash-line{height:3px;margin:18px auto 0;border-radius:999px;width:150px;overflow:hidden;background:rgba(255,255,255,.06)}
-#aix-splash .aix-splash-line span{display:block;height:100%;width:42%;border-radius:999px;background:linear-gradient(90deg,#39d6ff,#6b86ff,#8c6fff);animation:aixBootLine 1.15s ease-in-out infinite}
-@keyframes aixBootSpin{to{transform:rotate(360deg)}}
-@keyframes aixBootLine{0%{transform:translateX(-110%)}50%{transform:translateX(130%)}100%{transform:translateX(260%)}}
-@media(prefers-reduced-motion:reduce){#aix-splash,#aix-splash .aix-splash-core,body.app-ready>*:not(#aix-splash){transition:none!important}#aix-splash .aix-splash-orbit:before,#aix-splash .aix-splash-line span{animation:none!important}}
+html,body{
+  background:#06101d!important;
+  min-height:100%;
+}
+body{
+  margin:0;
+  animation:aixMainEnter .22s ease-out both;
+}
+@keyframes aixMainEnter{
+  from{opacity:.94}
+  to{opacity:1}
+}
+@media(prefers-reduced-motion:reduce){
+  body{animation:none!important}
+}
 </style>
 
 <style>
@@ -254,21 +249,10 @@ details>summary:before{content:"✦";margin-right:8px;color:#62d7ff}
 <style id="aix-transition-polish">
 html{background:#06101d!important}
 body{-webkit-tap-highlight-color:transparent}
-@media(max-width:560px){body.app-ready>*:not(#aix-splash){transition-duration:.48s!important}}
 </style>
-
 </head>
 
-<body class="app-booting">
-
-<div id="aix-splash" role="status" aria-label="AI 안전평가 시스템 시작 중">
-  <div class="aix-splash-core">
-    <div class="aix-splash-orbit"></div>
-    <div class="aix-splash-kicker">AI SAFETY COPILOT</div>
-    <div class="aix-splash-title">현장 위험성평가 VISION</div>
-    <div class="aix-splash-sub">안전 분석 엔진을 준비하고 있습니다</div>
-    <div class="aix-splash-line"><span></span></div>
-  </div>
+<body>
 </div>
 
 
@@ -1950,37 +1934,6 @@ input[type="checkbox"]{width:22px!important;height:22px!important;min-width:22px
 })();
 </script>
 
-
-<script>
-/* ===== 앱 시작 화면: 부드러운 크로스페이드 전환 ===== */
-(function(){
-  const startedAt=performance.now();
-  let finished=false;
-  function finishBoot(){
-    if(finished) return;
-    finished=true;
-    const body=document.body;
-    const splash=document.getElementById('aix-splash');
-    const elapsed=performance.now()-startedAt;
-    const wait=Math.max(0,650-elapsed);
-    setTimeout(()=>{
-      requestAnimationFrame(()=>requestAnimationFrame(()=>{
-        body.classList.remove('app-booting');
-        body.classList.add('app-ready');
-        if(splash){
-          splash.classList.add('aix-hide');
-          setTimeout(()=>{splash.remove();body.classList.remove('app-ready');},700);
-        }else{
-          body.classList.remove('app-ready');
-        }
-      }));
-    },wait);
-  }
-  if(document.readyState==='complete') finishBoot();
-  else window.addEventListener('load',finishBoot,{once:true});
-  setTimeout(finishBoot,1800);
-})();
-</script>
 
 </body>
 </html>
