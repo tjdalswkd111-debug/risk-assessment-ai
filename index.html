@@ -11,12 +11,15 @@
 
 <meta name="theme-color" content="#06101d">
 <style id="aix-critical-boot">
-html,body{background:#06101d!important}
+html,body{background:#06101d!important;min-height:100%}
+body{transition:background-color .45s ease}
 body.app-booting{margin:0!important;max-width:none!important;overflow:hidden!important}
-body.app-booting>*:not(#aix-splash){visibility:hidden!important}
-#aix-splash{position:fixed;inset:0;z-index:2147483647;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 36%,rgba(42,196,255,.14),transparent 30%),radial-gradient(circle at 65% 70%,rgba(116,91,255,.12),transparent 34%),linear-gradient(155deg,#050c16 0%,#071526 52%,#0b1531 100%);color:#edf9ff;opacity:1;transition:opacity .32s ease,visibility .32s ease}
-#aix-splash.aix-hide{opacity:0;visibility:hidden;pointer-events:none}
-#aix-splash .aix-splash-core{width:min(78vw,320px);text-align:center}
+body.app-booting>*:not(#aix-splash){opacity:0!important;transform:translateY(10px) scale(.992);filter:blur(2px);pointer-events:none!important}
+body.app-ready>*:not(#aix-splash){opacity:1!important;transform:none;filter:none;transition:opacity .58s cubic-bezier(.22,.8,.24,1),transform .58s cubic-bezier(.22,.8,.24,1),filter .48s ease}
+#aix-splash{position:fixed;inset:0;z-index:2147483647;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 34%,rgba(42,196,255,.15),transparent 31%),radial-gradient(circle at 66% 72%,rgba(116,91,255,.13),transparent 35%),linear-gradient(155deg,#050c16 0%,#071526 52%,#0b1531 100%);color:#edf9ff;opacity:1;transform:scale(1);filter:blur(0);will-change:opacity,transform,filter;transition:opacity .62s cubic-bezier(.22,.8,.24,1),transform .62s cubic-bezier(.22,.8,.24,1),filter .52s ease}
+#aix-splash.aix-hide{opacity:0;transform:scale(1.025);filter:blur(5px);pointer-events:none}
+#aix-splash .aix-splash-core{width:min(78vw,320px);text-align:center;transition:transform .45s cubic-bezier(.22,.8,.24,1),opacity .38s ease}
+#aix-splash.aix-hide .aix-splash-core{transform:translateY(-8px) scale(.985);opacity:.15}
 #aix-splash .aix-splash-orbit{width:88px;height:88px;margin:0 auto 18px;border-radius:28px;position:relative;display:grid;place-items:center;background:linear-gradient(145deg,rgba(43,207,255,.16),rgba(119,94,255,.18));border:1px solid rgba(105,216,255,.3);box-shadow:0 0 52px rgba(44,185,255,.18),inset 0 0 24px rgba(255,255,255,.025)}
 #aix-splash .aix-splash-orbit:before{content:"";position:absolute;inset:-7px;border-radius:32px;border:1px solid rgba(89,207,255,.15);border-top-color:#58dcff;border-right-color:#776cff;animation:aixBootSpin 1.25s linear infinite}
 #aix-splash .aix-splash-orbit:after{content:"";width:34px;height:34px;border-radius:50%;background:radial-gradient(circle,#c8f6ff 0 7%,#55dfff 13%,rgba(85,223,255,.16) 42%,transparent 70%);box-shadow:0 0 34px rgba(85,223,255,.7)}
@@ -27,7 +30,7 @@ body.app-booting>*:not(#aix-splash){visibility:hidden!important}
 #aix-splash .aix-splash-line span{display:block;height:100%;width:42%;border-radius:999px;background:linear-gradient(90deg,#39d6ff,#6b86ff,#8c6fff);animation:aixBootLine 1.15s ease-in-out infinite}
 @keyframes aixBootSpin{to{transform:rotate(360deg)}}
 @keyframes aixBootLine{0%{transform:translateX(-110%)}50%{transform:translateX(130%)}100%{transform:translateX(260%)}}
-@media (prefers-reduced-motion:reduce){#aix-splash .aix-splash-orbit:before,#aix-splash .aix-splash-line span{animation:none}}
+@media(prefers-reduced-motion:reduce){#aix-splash,#aix-splash .aix-splash-core,body.app-ready>*:not(#aix-splash){transition:none!important}#aix-splash .aix-splash-orbit:before,#aix-splash .aix-splash-line span{animation:none!important}}
 </style>
 
 <style>
@@ -248,6 +251,12 @@ details>summary:before{content:"✦";margin-right:8px;color:#62d7ff}
 <style>
 .aix-ui-version{margin-top:4px;font-size:9px;font-weight:900;letter-spacing:.12em;color:#5edcff;opacity:.8}
 </style>
+<style id="aix-transition-polish">
+html{background:#06101d!important}
+body{-webkit-tap-highlight-color:transparent}
+@media(max-width:560px){body.app-ready>*:not(#aix-splash){transition-duration:.48s!important}}
+</style>
+
 </head>
 
 <body class="app-booting">
@@ -1943,30 +1952,33 @@ input[type="checkbox"]{width:22px!important;height:22px!important;min-width:22px
 
 
 <script>
-/* ===== 앱 시작 화면: 흰 화면 없이 자연스럽게 전환 ===== */
+/* ===== 앱 시작 화면: 부드러운 크로스페이드 전환 ===== */
 (function(){
-  const bootStarted=performance.now();
+  const startedAt=performance.now();
   let finished=false;
   function finishBoot(){
     if(finished) return;
     finished=true;
-    const splash=document.getElementById('aix-splash');
     const body=document.body;
-    const elapsed=performance.now()-bootStarted;
-    const wait=Math.max(0,520-elapsed);
+    const splash=document.getElementById('aix-splash');
+    const elapsed=performance.now()-startedAt;
+    const wait=Math.max(0,650-elapsed);
     setTimeout(()=>{
-      requestAnimationFrame(()=>{
+      requestAnimationFrame(()=>requestAnimationFrame(()=>{
         body.classList.remove('app-booting');
+        body.classList.add('app-ready');
         if(splash){
           splash.classList.add('aix-hide');
-          setTimeout(()=>splash.remove(),380);
+          setTimeout(()=>{splash.remove();body.classList.remove('app-ready');},700);
+        }else{
+          body.classList.remove('app-ready');
         }
-      });
+      }));
     },wait);
   }
   if(document.readyState==='complete') finishBoot();
   else window.addEventListener('load',finishBoot,{once:true});
-  setTimeout(finishBoot,1400);
+  setTimeout(finishBoot,1800);
 })();
 </script>
 
