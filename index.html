@@ -614,8 +614,8 @@ body{-webkit-tap-highlight-color:transparent}
   <div id="site_site_etc_wrap" class="etc-input">
       <input type="text" id="site_site_ect_text" placeholder="기타 항목 입력" oninput="generateImage()">
   </div>
-  <label style="margin-top: 10px;">[현장 특이 사항] <span style="font-size:10px;color:#7ddfff;font-weight:900">온도 자동반영 · AI 완전 차단</span>
-      <input type="text" id="special_note" value="팀장과 온열질환 예방조치 확인 후 진행" placeholder="현장 특이 사항을 입력하세요" oninput="generateImage()">
+  <label style="margin-top: 10px;">[현장 특이 사항] <span style="font-size:10px;color:#7ddfff;font-weight:900">온도 전용 · AI 수정 불가</span>
+      <input type="text" id="special_note" value="팀장과 온열질환 예방조치 확인 후 진행" readonly aria-readonly="true" placeholder="온도에 따라 자동 입력됩니다">
   </label>
 </details>
 
@@ -660,8 +660,8 @@ body{-webkit-tap-highlight-color:transparent}
 </details>
 
 <label>추가 위험요인 및 대책
-  <input type="text" id="danger_ect_point" maxlength="10" placeholder="위험요인 (10자 이내)" oninput="this.value=Array.from(this.value).slice(0,10).join(''); generateImage()">
-  <input type="text" id="danger_ect_todo" maxlength="10" placeholder="대책 (10자 이내)" oninput="this.value=Array.from(this.value).slice(0,10).join(''); generateImage()">
+  <input type="text" id="danger_ect_point" maxlength="10" placeholder="위험요인 (10자 이내)" oninput="this.value=limitTenChars(this.value); generateImage()">
+  <input type="text" id="danger_ect_todo" maxlength="10" placeholder="대책 (10자 이내)" oninput="this.value=limitTenChars(this.value); generateImage()">
 </label>
 
 <details class="assessment-section" open>
@@ -848,6 +848,8 @@ const checkPositions = {
 };
 
 function generateImage() {
+  if(typeof enforceRiskTextLimits==='function') enforceRiskTextLimits();
+  if(typeof updateSpecialNoteByTemp==='function') updateSpecialNoteByTemp();
   if (!templateImage.complete) return;
   canvas.width = templateImage.width;
   canvas.height = templateImage.height;
@@ -898,6 +900,8 @@ function generateImage() {
 }
 
 function saveImage() {
+  if(typeof enforceRiskTextLimits==='function') enforceRiskTextLimits();
+  if(typeof updateSpecialNoteByTemp==='function') updateSpecialNoteByTemp();
   // 1) 사용자가 최종 수정한 평가표 이미지를 먼저 저장
   const a = document.createElement("a");
   const dateVal = getDisplayDateTime().replace(/[: ]/g, '-');
@@ -1255,23 +1259,32 @@ function setWeatherAndTemperature(options = {}) {
 <script>
 // 체감온도에 따라 현장 특이사항 멘트를 업데이트합니다. AI는 이 필드를 수정하지 않습니다.
 function updateSpecialNoteByTemp() {
-    const fakeTempStr = document.getElementById("fake_temperature").value;
+    const fakeTempStr = document.getElementById("fake_temperature")?.value || "";
     const specialNoteElem = document.getElementById("special_note");
     if (!specialNoteElem) return;
 
     const tempMatch = fakeTempStr.match(/-?\d+(\.\d+)?/);
     const temp = tempMatch ? parseFloat(tempMatch[0]) : null;
 
-    if (temp !== null && temp >= 33) {
-        specialNoteElem.value = "팀장과 온열질환 예방조치 확인 후 진행, (위험성 : 온열질환, 경감대책 : 물/보냉장구 제공 및 구비하여 작업 시 매 2시간 이내 20분 이상 휴식하여 작업 진행)";
-    } else {
-        specialNoteElem.value = "팀장과 온열질환 예방조치 확인 후 진행";
-    }
+    const expected = (temp !== null && temp >= 33)
+      ? "팀장과 온열질환 예방조치 확인 후 진행, (위험성 : 온열질환, 경감대책 : 물/보냉장구 제공 및 구비하여 작업 시 매 2시간 이내 20분 이상 휴식하여 작업 진행)"
+      : "팀장과 온열질환 예방조치 확인 후 진행";
 
-    if (typeof generateImage === "function") {
-        generateImage();
+    if (specialNoteElem.value !== expected) {
+        specialNoteElem.value = expected;
+        if (typeof generateImage === "function") generateImage();
     }
 }
+document.addEventListener('DOMContentLoaded', () => {
+  const specialNoteElem = document.getElementById('special_note');
+  if (specialNoteElem) {
+    specialNoteElem.addEventListener('input', updateSpecialNoteByTemp);
+    specialNoteElem.addEventListener('change', updateSpecialNoteByTemp);
+  }
+  updateSpecialNoteByTemp();
+});
+setInterval(updateSpecialNoteByTemp, 1000);
+
 let deferredPrompt;
 
 window.addEventListener('beforeinstallprompt', (e) => {
@@ -1735,12 +1748,37 @@ ${JSON.stringify(items,null,2)}
     if(parent) parent.checked=true;
   }
 
+  function limitTenChars(value){
+    return Array.from(String(value||'').replace(/\s+/g,' ').trim())
+      .slice(0,10).join('').trim();
+  }
+
+  function enforceRiskTextLimits(){
+    const risk=document.getElementById('danger_ect_point');
+    const todo=document.getElementById('danger_ect_todo');
+    if(risk) risk.value=limitTenChars(risk.value);
+    if(todo) todo.value=limitTenChars(todo.value);
+  }
+
   function applyTextValue(id,value,append){
     const el=document.getElementById(id); if(!el || !value) return;
-    const v=String(value).trim(); if(!v) return;
+    let v=String(value).trim(); if(!v) return;
+
+    if(id==='danger_ect_point' || id==='danger_ect_todo'){
+      v=limitTenChars(v);
+      append=false;
+    }
+
     if(append && el.value.trim()){
       if(!el.value.includes(v)) el.value=el.value.trim()+' / '+v;
-    }else el.value=v;
+    }else{
+      el.value=v;
+    }
+
+    if(id==='danger_ect_point' || id==='danger_ect_todo'){
+      el.value=limitTenChars(el.value);
+    }
+
     el.dispatchEvent(new Event('input',{bubbles:true}));
     el.dispatchEvent(new Event('change',{bubbles:true}));
   }
@@ -1937,7 +1975,7 @@ ${JSON.stringify(items,null,2)}
 
     // 대책은 최대 10자
     g=Array.from(g).slice(0,10).join('').replace(/[\s,./·\-]+$/,'');
-    return g || '안전조치';
+    return limitTenChars(g || '안전조치');
   }
 
   /* ===== 공유 현장 학습: 이미지 저장 시 최종 수정값을 서버에 축적 ===== */
@@ -2012,8 +2050,8 @@ ${JSON.stringify(items,null,2)}
       images,
       facts,
       selected_items,
-      additional_risk:Array.from(String(document.getElementById('danger_ect_point')?.value||'').trim()).slice(0,10).join(''),
-      countermeasure:Array.from(String(document.getElementById('danger_ect_todo')?.value||'').trim()).slice(0,10).join(''),
+      additional_risk:limitTenChars(document.getElementById('danger_ect_point')?.value||''),
+      countermeasure:limitTenChars(document.getElementById('danger_ect_todo')?.value||''),
       weather:{
         temperature:String(document.getElementById('real_temperature')?.value||''),
         apparent_temperature:String(document.getElementById('fake_temperature')?.value||'')
@@ -2046,6 +2084,14 @@ ${JSON.stringify(items,null,2)}
       !data.duplicate
     );
     refreshSharedLearningCount();
+  enforceRiskTextLimits();
+  ['danger_ect_point','danger_ect_todo'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el){
+      el.addEventListener('change',()=>{enforceRiskTextLimits();generateImage();});
+      el.addEventListener('blur',()=>{enforceRiskTextLimits();generateImage();});
+    }
+  });
     return data;
   };
 
@@ -2105,8 +2151,9 @@ ${JSON.stringify(items,null,2)}
       const todoField=document.getElementById('danger_ect_todo');
 
       if(shortRisk){
-        applyTextValue('danger_ect_point',shortRisk,false);
-        applyTextValue('danger_ect_todo',shortTodo,false);
+        applyTextValue('danger_ect_point',limitTenChars(shortRisk),false);
+        applyTextValue('danger_ect_todo',limitTenChars(shortTodo),false);
+        enforceRiskTextLimits();
       }else{
         // 실제 추가 위험요인이 없으면 이전 AI 문구가 남지 않도록 비움
         if(riskField){riskField.value='';riskField.dispatchEvent(new Event('input',{bubbles:true}));}
