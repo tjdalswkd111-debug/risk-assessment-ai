@@ -1416,7 +1416,7 @@ ${JSON.stringify(items,null,2)}
     {"value":"allowed value","reason":"사진상 해당 위험을 뒷받침하는 근거가 없음"}
   ],
   "summary":"추가 위험요인을 20자 이내로 간략히 작성",
-  "guidance":"대책을 20자 이내로 간략히 작성",
+  "guidance":"summary의 추가 위험요인에 직접 대응하는 대책을 10자 이내로 매우 간략히 작성",
   "special_note":"",
   "overall_confidence":82
 }`;
@@ -1678,7 +1678,7 @@ ${JSON.stringify(items,null,2)}
       // 기존 체크는 유지하고, AI가 판단하지 못한 기존 체크를 해제하지 않습니다.
       // 현장 특이사항은 사용자가 직접 입력하며 AI는 절대 수정하지 않습니다.
       const shortRisk=compactRiskText(data.summary,20);
-      const shortTodo=compactRiskText(data.guidance,20);
+      const shortTodo=compactRiskText(data.guidance,10);
       applyTextValue('danger_ect_point',shortRisk,false);
       applyTextValue('danger_ect_todo',shortTodo,false);
       if(typeof generateImage==='function') generateImage();
@@ -1700,7 +1700,7 @@ ${JSON.stringify(items,null,2)}
         <br><b>🟢 자동 체크된 항목</b><ul>${autoHtml||'<li>없음</li>'}</ul>
         ${reviewFinal.length?`<b>🟠 현장 확인 후 체크할 후보</b><ul>${revHtml}</ul>`:''}
         <br><b>추가 위험요인</b><br>${esc(shortRisk||'없음')}
-        <br><br><b>대책</b><br>${esc(shortTodo||'없음')}
+        <br><br><b>추가 위험요인 대책</b><br>${esc(shortTodo||'없음')}
         <br><br><span class="ai-muted">AI는 사진으로 확인 가능한 정보만 판단했습니다. 최종 체크는 실제 현장에서 재확인하세요.</span>`;
       status.textContent=`✅ ${auto.length}개 자동 체크 · ${reviewFinal.length}개 검토 후보. 기존 사용자가 체크한 항목은 유지했습니다.`;
     }catch(err){
