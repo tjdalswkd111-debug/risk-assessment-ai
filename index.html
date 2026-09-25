@@ -230,6 +230,12 @@ button{min-height:42px;touch-action:manipulation}
 .ai-paste{display:flex;gap:8px;align-items:stretch;margin-top:8px}
 .ai-paste button{flex:1;min-height:48px;border-radius:14px;border:1px solid rgba(98,215,255,.22);background:linear-gradient(135deg,#17395c,#202b62);color:#fff;font-weight:800}
 .ai-paste button:active{transform:scale(.99)}
+
+#chatgpt-ai-panel .ai-env-hint{
+  margin-top:7px;font-size:10px;line-height:1.45;color:#7892aa;font-weight:800;
+  letter-spacing:-.1px
+}
+
 @media(max-width:560px){.ai-stage{grid-template-columns:repeat(3,1fr)}.ai-title{font-size:18px!important}.ai-panel{border-radius:20px!important;padding:14px!important}}
 /* 기존 details도 미래형 카드로 통일 */
 main details, details{border:1px solid rgba(90,150,210,.18)!important;border-radius:18px!important;background:rgba(255,255,255,.025)!important;overflow:hidden;margin:10px 0!important;box-shadow:0 7px 22px rgba(0,0,0,.07)}
@@ -1400,7 +1406,31 @@ function showInstallGuide() {
 - 추락 위험 → 안전대 체결후 작업 진행
 - 낙하물 위험 → 공구 결속후 작업 진행
 - 화재 위험 → 소화기 비치후 작업 진행
-일반론, 재확인 멘트, 설명문은 guidance에 넣지 마세요.
+20. 사진에서 작업환경도 함께 파악하세요. 작업환경은 다음 중 가장 가까운 것으로 판단합니다:
+- 나대지
+- 전주
+- 강관주
+- 철탑
+- 건물안
+- 터널
+- 옥상
+- 옥탑
+작업환경 자체는 위험요인이 아닙니다. 예를 들어 '옥상', '옥탑', '터널'이라는 이유만으로 추락·질식 등을 자동 판단하지 마세요. 사진에 실제 위험 근거가 있을 때만 위험요인으로 판단하세요.
+
+21. summary는 '추가 위험요인' 전용입니다. 현장 설명/정상상태/보호구 착용 사실/날씨는 summary에 절대 넣지 마세요.
+- 금지 예: "맑은 날씨", "옥탑 통신 설비 구역", "안전모·안전조끼·안전화 착용 확인", "작업 전 상태 확인"
+- 허용 예: "작업중 감전 위험", "옥탑 가장자리 추락 위험", "주행차량 충돌 위험", "낙하물 위험"
+- 실제 추가 위험요인이 명확하지 않으면 summary와 guidance를 빈 문자열("")로 반환하세요.
+22. 아래와 같은 재확인/판단불가 상투문구는 summary, guidance, reason, facts 등 어떤 출력 필드에도 절대 작성하지 마세요.
+- "사진만으로 판단하기 어려움"
+- "실제 작업 진행 여부는 판단하기 어려움"
+- "안전대 체결 상태는 판단하기 어려움"
+- "현장 재확인 필요"
+- "최종 확인 필요"
+- "확인되지 않음"
+사진에서 직접 확인되는 위험과 그에 대한 구체적인 대책만 짧게 작성하세요.
+대표 위험 예시는 감전, 추락, 낙하물, 차량충돌, 끼임/협착, 화재·폭발, 미끄럼/넘어짐, 장비충돌 등입니다.
+보호구를 정상 착용하고 있다는 사실은 '위험요인'이 아니라 '확인된 사실'로만 취급하세요.
 
 [현재 작업/현장 입력값]
 ${JSON.stringify(context,null,2)}
@@ -1423,7 +1453,7 @@ ${JSON.stringify(items,null,2)}
   "excluded_values":[
     {"value":"allowed value","reason":"사진상 해당 위험을 뒷받침하는 근거가 없음"}
   ],
-  "summary":"추가 위험요인을 20자 이내로 간략히 작성",
+  "summary":"실제 위험사건/위험상태만 20자 이내 작성. 정상상태·PPE착용·날씨·현장설명 금지. 위험 없으면 빈 문자열",
   "guidance":"summary의 추가 위험요인에 직접 대응하는 짧은 작업지시형 대책. 예: 누전검진기 확인후 작업 진행",
   "overall_confidence":82
 }`;
@@ -1572,12 +1602,15 @@ ${JSON.stringify(items,null,2)}
         delete data.special_note;
       }
 
+      // "사진만으로 판단 어려움 / 현장 재확인 필요" 같은 상투문구도 전부 제거
+      sanitizeAiPayload(data);
+
       resultText.value=JSON.stringify(data,null,2);
       resultText.dispatchEvent(new Event('input',{bubbles:true}));
       setAiProgress(93,'평가표 자동 반영','80% 이상 항목과 안전안내를 평가표에 적용하고 있습니다.');
       status.textContent='✅ AI 분석 완료. 신뢰도 기준으로 자동 반영합니다...';
       document.getElementById('ai-import-btn').click();
-      setAiProgress(100,'분석 및 자동 반영 완료','현장 재확인이 필요한 항목도 함께 정리했습니다.','success');
+      setAiProgress(100,'분석 및 자동 반영 완료','위험요인과 대책을 평가표에 반영했습니다.','success');
       hideAiProgress(1800);
     }catch(err){
       setAiProgress(100,'AI 분석을 완료하지 못했습니다',String(err?.message||err),'error');
@@ -1663,8 +1696,144 @@ ${JSON.stringify(items,null,2)}
     return v;
   }
 
+  function sanitizeAiPhrase(value){
+    let s=String(value||'').replace(/\s+/g,' ').trim();
+    if(!s) return '';
+
+    const banned=[
+      /사진만으로/i,
+      /판단(?:하기)?\s*어렵/i,
+      /판단할\s*수\s*없/i,
+      /현장\s*재확인/i,
+      /재확인\s*필요/i,
+      /최종\s*확인\s*필요/i,
+      /실제\s*작업\s*진행\s*여부/i,
+      /체결\s*상태.*확인/i,
+      /확인되지\s*않/i
+    ];
+
+    // 문장 단위로 금지 문구가 들어간 부분을 통째로 제거
+    const parts=s.split(/(?<=[.!?。])\s+|[\n\r]+|(?=\s*-\s+)/);
+    const kept=parts.filter(part=>{
+      const p=part.trim();
+      if(!p) return false;
+      return !banned.some(rx=>rx.test(p));
+    });
+
+    s=kept.join(' ').trim();
+
+    // 문장 구분이 없는 단일 장문도 최종 차단
+    if(banned.some(rx=>rx.test(s))) return '';
+    return s;
+  }
+
+  function sanitizeAiPayload(data){
+    if(!data || typeof data!=='object') return data;
+
+    if(typeof data.summary==='string') data.summary=sanitizeAiPhrase(data.summary);
+    if(typeof data.guidance==='string') data.guidance=sanitizeAiPhrase(data.guidance);
+
+    for(const key of ['facts','selected_values','review_values','excluded_values']){
+      if(!Array.isArray(data[key])) continue;
+      data[key]=data[key].map(item=>{
+        if(!item || typeof item!=='object') return item;
+        const copy={...item};
+        if(typeof copy.fact==='string') copy.fact=sanitizeAiPhrase(copy.fact);
+        if(typeof copy.reason==='string'){
+          const cleaned=sanitizeAiPhrase(copy.reason);
+          copy.reason=cleaned || '사진 근거 기준 검토';
+        }
+        return copy;
+      });
+    }
+    return data;
+  }
+
+  function classifyWorkEnvironment(data){
+    const factText=(Array.isArray(data?.facts)?data.facts:[])
+      .map(x=>String(x?.fact||''))
+      .join(' ')
+      .replace(/\s+/g,' ')
+      .trim();
+
+    // 환경 분류는 AI가 사진에서 기술한 객관적 사실을 기준으로만 합니다.
+    const rules=[
+      ['터널', /(터널|갱도|터널\s*내부)/i],
+      ['철탑', /(철탑|송전탑|통신\s*철탑)/i],
+      ['전주', /(전주|전봇대|전신주)/i],
+      ['강관주', /(강관주|강관\s*폴|강관\s*기둥|steel\s*pole)/i],
+      ['옥탑', /(옥탑|옥탑방|옥탑\s*통신|rooftop\s*penthouse)/i],
+      ['옥상', /(옥상|루프탑|rooftop)/i],
+      ['건물안', /(실내|건물\s*내부|기계실|전산실|통신실|지하실|복도)/i],
+      ['나대지', /(나대지|공터|야외\s*부지|빈\s*부지|open\s*field)/i]
+    ];
+
+    for(const [name,rx] of rules){
+      if(rx.test(factText)) return name;
+    }
+    return '';
+  }
+
+  function environmentHintText(env){
+    return env ? `작업환경: ${env}` : '';
+  }
+
+  function containsActualHazard(value){
+    const s=String(value||'').replace(/\s+/g,' ').trim();
+    if(!s) return false;
+
+    // 실제 사고/위험상태 또는 명백한 안전결함을 나타내는 표현만 인정
+    const hazardRx=/(감전|누전|활선|추락|떨어짐|낙하|비래|충돌|교통사고|끼임|협착|화재|폭발|미끄럼|넘어짐|전도|붕괴|질식|중독|화상|베임|찔림|감김|익사|낙뢰|온열|저체온|결빙|개구부|단차|고소|가장자리|사다리|노출\s*전선|파손|불안정|장애물|적치물|물기|젖은|불꽃|인화물|미착용|미체결|미고정|미설치|통행\s*차량|주행\s*차량|장비\s*접근|낙석|낙하\s*자재|산소\s*결핍|유해\s*가스|협소\s*공간)/i;
+    return hazardRx.test(s);
+  }
+
+  function riskPhraseFromAuto(auto,allowedMap){
+    const candidates=[];
+    for(const x of (auto||[])){
+      const it=allowedMap.get(x.value);
+      if(!it) continue;
+
+      // 주요 위험요인은 label, 세부조치는 상위 category를 기준으로 위험명 추출
+      const source=String(
+        it.role==='주요 위험요인' ? it.label :
+        (it.category && it.category!=='기타' ? it.category : '')
+      ).replace(/\s+/g,' ').trim();
+
+      if(source) candidates.push(source);
+    }
+
+    for(const s of candidates){
+      if(/감전|전기|누전|활선|전선/i.test(s)) return '작업중 감전 위험';
+      if(/차량|교통|주행/i.test(s)) return '주행차량 충돌 위험';
+      if(/사다리/i.test(s)) return '사다리 작업 추락 위험';
+      if(/추락|떨어짐|고소/i.test(s)) return '고소작업 추락 위험';
+      if(/낙하|비래/i.test(s)) return '낙하물 위험';
+      if(/화재|폭발|인화/i.test(s)) return '화재·폭발 위험';
+      if(/끼임|협착/i.test(s)) return '장비 끼임 위험';
+      if(/넘어짐|전도|미끄럼/i.test(s)) return '작업구역 넘어짐 위험';
+      if(/건설장비|중장비|굴삭기|크레인/i.test(s)) return '장비 충돌 위험';
+      if(/질식|산소|유해\s*가스/i.test(s)) return '질식 위험';
+      if(/낙석|붕괴/i.test(s)) return '낙석·붕괴 위험';
+      if(/베임|절단|날카/i.test(s)) return '베임 위험';
+      if(/낙뢰/i.test(s)) return '낙뢰 위험';
+    }
+    return '';
+  }
+
+  function normalizeAdditionalRisk(aiSummary,auto,allowedMap){
+    const raw=sanitizeAiPhrase(aiSummary);
+    const compact=compactRiskText(raw,20);
+
+    // "맑은 날씨 + 옥탑 + PPE 착용 확인" 같은 단순 현장 묘사는 위험요인으로 사용하지 않음
+    if(containsActualHazard(compact)) return compact;
+
+    // AI summary가 현장 설명으로 잘못 온 경우, 자동체크된 '주요 위험요인'에서만 안전하게 재구성
+    return riskPhraseFromAuto(auto,allowedMap);
+  }
+
   function matchedCountermeasure(risk, aiGuidance){
     const r=String(risk||'').replace(/\s+/g,' ').trim();
+    if(!r || !containsActualHazard(r)) return '';
 
     // 추가 위험요인과 직접 대응하는 대표 작업지시 문구
     if(/감전|전기|누전|활선|전선/.test(r)) return '누전검진기 확인후 작업 진행';
@@ -1676,17 +1845,19 @@ ${JSON.stringify(items,null,2)}
     if(/끼임|협착/.test(r)) return '접근 통제후 작업 진행';
     if(/전도|넘어짐|미끄럼/.test(r)) return '통로 정리후 작업 진행';
     if(/건설장비|중장비|굴삭기|크레인/.test(r)) return '작업반경 통제후 작업 진행';
+    if(/질식|산소|유해\s*가스/.test(r)) return '환기 확인후 작업 진행';
+    if(/낙석|붕괴/.test(r)) return '낙석구간 통제후 작업 진행';
+    if(/베임|절단/.test(r)) return '보호장갑 착용후 작업 진행';
+    if(/낙뢰/.test(r)) return '기상 확인후 작업 진행';
 
     // 그 외에는 AI가 만든 직접 대책을 사용하되 장황한 설명은 제거
-    let g=String(aiGuidance||'')
-      .replace(/\s+/g,' ')
+    let g=sanitizeAiPhrase(aiGuidance)
       .replace(/^(대책|안전\s*조치|안전조치)\s*[:：\-]?\s*/i,'')
-      .replace(/현장\s*재확인\s*필요/gi,'')
       .trim();
 
     // 자연스러운 작업지시 문장을 유지하기 위해 최대 20자
     if(g.length>20) g=g.slice(0,20).replace(/[\s,./·\-]+$/,'');
-    return g;
+    return g || '안전조치후 작업 진행';
   }
 
   document.getElementById('ai-import-btn').addEventListener('click',function(){
@@ -1719,10 +1890,20 @@ ${JSON.stringify(items,null,2)}
 
       // 기존 체크는 유지하고, AI가 판단하지 못한 기존 체크를 해제하지 않습니다.
       // 현장 특이사항은 사용자가 직접 입력하며 AI는 절대 수정하지 않습니다.
-      const shortRisk=compactRiskText(data.summary,20);
-      const shortTodo=matchedCountermeasure(shortRisk,data.guidance);
-      applyTextValue('danger_ect_point',shortRisk,false);
-      applyTextValue('danger_ect_todo',shortTodo,false);
+      const workEnvironment=classifyWorkEnvironment(data);
+      const shortRisk=normalizeAdditionalRisk(data.summary,auto,allowedMap);
+      const shortTodo=matchedCountermeasure(shortRisk,sanitizeAiPhrase(data.guidance));
+      const riskField=document.getElementById('danger_ect_point');
+      const todoField=document.getElementById('danger_ect_todo');
+
+      if(shortRisk){
+        applyTextValue('danger_ect_point',shortRisk,false);
+        applyTextValue('danger_ect_todo',shortTodo,false);
+      }else{
+        // 실제 추가 위험요인이 없으면 이전 AI 문구가 남지 않도록 비움
+        if(riskField){riskField.value='';riskField.dispatchEvent(new Event('input',{bubbles:true}));}
+        if(todoField){todoField.value='';todoField.dispatchEvent(new Event('input',{bubbles:true}));}
+      }
 
       // AI 결과가 어떤 내용을 반환하더라도 현장 특이사항은 온도 로직 값으로 즉시 복원
       if(typeof updateSpecialNoteByTemp==='function') updateSpecialNoteByTemp();
@@ -1742,12 +1923,13 @@ ${JSON.stringify(items,null,2)}
       resultBox.style.display='block';
       resultBox.innerHTML=`<b>✅ 정확도 기준 반영 완료</b><br>
         자동 체크 <b class="ai-good">${auto.length}개</b> · 현장 검토 후보 <b class="ai-warn">${reviewFinal.length}개</b>
+        ${workEnvironment?`<br><br><b>🏗️ 작업환경</b><br>${esc(workEnvironment)}`:''}
         ${facts?`<br><br><b>📷 확인된 사실</b><ul>${facts}</ul>`:''}
         <br><b>🟢 자동 체크된 항목</b><ul>${autoHtml||'<li>없음</li>'}</ul>
         ${reviewFinal.length?`<b>🟠 현장 확인 후 체크할 후보</b><ul>${revHtml}</ul>`:''}
         <br><b>추가 위험요인</b><br>${esc(shortRisk||'없음')}
         <br><br><b>추가 위험요인에 대한 대책</b><br>${esc(shortTodo||'없음')}
-        <br><br><span class="ai-muted">AI는 사진으로 확인 가능한 정보만 판단했습니다. 최종 체크는 실제 현장에서 재확인하세요.</span>`;
+        `;
       status.textContent=`✅ ${auto.length}개 자동 체크 · ${reviewFinal.length}개 검토 후보. 기존 사용자가 체크한 항목은 유지했습니다.`;
     }catch(err){
       resultBox.style.display='block';
