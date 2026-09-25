@@ -9,13 +9,34 @@
 <meta name="apple-mobile-web-app-title" content="위험성평가표">
 <meta name="mobile-web-app-capable" content="yes">
 
+<meta name="theme-color" content="#06101d">
+<style id="aix-critical-boot">
+html,body{background:#06101d!important}
+body.app-booting{margin:0!important;max-width:none!important;overflow:hidden!important}
+body.app-booting>*:not(#aix-splash){visibility:hidden!important}
+#aix-splash{position:fixed;inset:0;z-index:2147483647;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 36%,rgba(42,196,255,.14),transparent 30%),radial-gradient(circle at 65% 70%,rgba(116,91,255,.12),transparent 34%),linear-gradient(155deg,#050c16 0%,#071526 52%,#0b1531 100%);color:#edf9ff;opacity:1;transition:opacity .32s ease,visibility .32s ease}
+#aix-splash.aix-hide{opacity:0;visibility:hidden;pointer-events:none}
+#aix-splash .aix-splash-core{width:min(78vw,320px);text-align:center}
+#aix-splash .aix-splash-orbit{width:88px;height:88px;margin:0 auto 18px;border-radius:28px;position:relative;display:grid;place-items:center;background:linear-gradient(145deg,rgba(43,207,255,.16),rgba(119,94,255,.18));border:1px solid rgba(105,216,255,.3);box-shadow:0 0 52px rgba(44,185,255,.18),inset 0 0 24px rgba(255,255,255,.025)}
+#aix-splash .aix-splash-orbit:before{content:"";position:absolute;inset:-7px;border-radius:32px;border:1px solid rgba(89,207,255,.15);border-top-color:#58dcff;border-right-color:#776cff;animation:aixBootSpin 1.25s linear infinite}
+#aix-splash .aix-splash-orbit:after{content:"";width:34px;height:34px;border-radius:50%;background:radial-gradient(circle,#c8f6ff 0 7%,#55dfff 13%,rgba(85,223,255,.16) 42%,transparent 70%);box-shadow:0 0 34px rgba(85,223,255,.7)}
+#aix-splash .aix-splash-kicker{font-size:10px;letter-spacing:.22em;font-weight:900;color:#6edfff}
+#aix-splash .aix-splash-title{margin-top:7px;font-size:21px;font-weight:950;letter-spacing:-.65px}
+#aix-splash .aix-splash-sub{margin-top:6px;font-size:11px;color:#8da7c1;font-weight:700}
+#aix-splash .aix-splash-line{height:3px;margin:18px auto 0;border-radius:999px;width:150px;overflow:hidden;background:rgba(255,255,255,.06)}
+#aix-splash .aix-splash-line span{display:block;height:100%;width:42%;border-radius:999px;background:linear-gradient(90deg,#39d6ff,#6b86ff,#8c6fff);animation:aixBootLine 1.15s ease-in-out infinite}
+@keyframes aixBootSpin{to{transform:rotate(360deg)}}
+@keyframes aixBootLine{0%{transform:translateX(-110%)}50%{transform:translateX(130%)}100%{transform:translateX(260%)}}
+@media (prefers-reduced-motion:reduce){#aix-splash .aix-splash-orbit:before,#aix-splash .aix-splash-line span{animation:none}}
+</style>
+
 <style>
 body {
   font-family: -apple-system, sans-serif;
   padding: 10px;
   max-width: 480px;
   margin: auto;
-  background-color: #ffffff;
+  background-color: #06101d;
 }
 .form {
   display: flex;
@@ -106,7 +127,7 @@ summary {
 }
 
   body {
-    background-color: #ffffff !important;
+    background-color: #06101d !important;
   }
   .form {
     background-color: #ffffff !important;
@@ -226,7 +247,18 @@ details>summary:before{content:"✦";margin-right:8px;color:#62d7ff}
 <link rel="manifest" href="data:application/manifest+json;base64,eyJuYW1lIjogIlx1ZDYwNFx1YzdhNSBcdWM3MDRcdWQ1ZDhcdWMxMzEgXHVkM2M5XHVhYzAwXHVkNDVjIiwgInNob3J0X25hbWUiOiAiXHVjNzA0XHVkNWQ4XHVjMTMxXHVkM2M5XHVhYzAwIiwgInN0YXJ0X3VybCI6ICIuIiwgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsICJiYWNrZ3JvdW5kX2NvbG9yIjogIiNmZmZmZmYiLCAidGhlbWVfY29sb3IiOiAiIzAwNzFlMyIsICJpY29ucyI6IFt7InNyYyI6ICJkYXRhOmltYWdlL3BuZztiYXNlNjQsaVZCT1J3MEtHZ29BQUFBTlNVaEVVZ0FBQWdBQUFBSUFDQUlBQUFCN0drT3RBQUFjOEVsRVFWUjRuTzNkZVhoVTViM0E4WGYySlR1RUVGWmwzM2VvVDVWRnZDSlhVS1FzVWhld1ZiVFdIWXV0MTFxcnRWWmJLNWVudFVvTFhXeXZWeEFRUlVWTGkxb0VSVUZXRVVRZzdJUWxlektUMmU4ZmFXMHVFcGp6Wm1aeVpuN2Z6K00vUG5JeWswak9kODU3M3ZjOUZqWG5zQUlBeUdOdDZUY0FBR2daQkFBQWhDSUFBQ0FVQVFBQW9RZ0FBQWhGQUFCQUtBSUFBRUlSQUFBUWlnQUFnRkFFQUFDRUlnQUFJQlFCQUFDaENBQUFDRVVBQUVBb0FnQUFRaEVBQUJDS0FBQ0FVQVFBQUlRaUFBQWdGQUVBQUtFSUFBQUlSUUFBUUNnQ0FBQkNFUUFBRUlvQUFJQlFCQUFBaENJQUFDQVVBUUFBb1FnQUFBaEZBQUJBS0FJQUFFSVJBQUFRaWdBQWdGQUVBQUNFSWdBQUlCUUJBQUNoQ0FBQUNFVUFBRUFvQWdBQVFoRUFBQkNLQUFDQVVBUUFBSVFpQUFBZ0ZBRUFBS0VJQUFBSVJRQUFRQ2dDQUFCQ0VRQUFFSW9BQUlCUUJBQUFoQ0lBQUNBVUFRQUFvUWdBQUFoRkFBQkFLQUlBQUVJUkFBQVFpZ0FBZ0ZBRUFBQ0VJZ0FBSUJRQkFBQ2hDQUFBQ0VVQUFFQW9BZ0FBUWhFQUFCQ0tBQUNBVUFRQUFJUWlBQUFnRkFFQUFLRUlBQUFJUlFBQVFDZ0NBQUJDRVFBQUVJb0FBSUJRQkFBQWhDSUFBQ0FVQVFBQW9RZ0FBQWhGQUFCQUtBSUFBRUlSQUFBUWlnQUFnRkFFQUFDRUlnQUFJQlFCQUFDaENBQUFDRVVBQUVBb0FnQUFRaEVBQUJDS0FBQ0FVQVFBQUlRaUFBQWdGQUVBQUtFSUFBQUlSUUFBUUNnQ0FBQkNFUUFBRUlvQUFJQlFCQUFBaENJQUFDQVVBUUFBb1FnQUFBaEZBQUJBS0FJQUFFSVJBQUFRaWdBQWdGQUVBQUNFSWdBQUlCUUJBQUNoQ0FBQUNFVUFBRUFvQWdBQVFoRUFBQkNLQUFDQVVBUUFBSVFpQUFBZ0ZBRUFBS0VJQUFBSVJRQUFRQ2dDQUFCQ0VRQUFFSW9BQUlCUUJBQUFoQ0lBQUNBVUFRQUFvUWdBQUFoRkFBQkFLQUlBQUVJUkFBQVFpZ0FBZ0ZBRUFBQ0VJZ0FBSUJRQkFBQ2hDQUFBQ0VVQUFFQW9BZ0FBUWhFQUFCQ0tBQUNBVUFRQUFJUWlBQUFnRkFFQUFLRUlBQUFJUlFBQVFDZ0NBQUJDRVFBQUVJb0FBSUJRQkFBQWhDSUFBQ0FVQVFBQW9RZ0FBQWhGQUFCQUtBSUFBRUlSQUFBUWlnQUFnRkFFQUFDRUlnQUFJQlFCQUFDaENBQUFDRVVBQUVBb0FnQUFRaEVBQUJDS0FBQ0FVQVFBQUlRaUFBQWdGQUVBQUtFSUFBQUlSUUFBUUNnQ0FBQkNFUUFBRUlvQUFJQlFCQUFBaENJQUFDQVVBUUFBb1FnQUFBaEZBQUJBS0FJQUFFSVJBQUFRaWdBQWdGQUVBQUNFSWdBQUlCUUJBQUNoQ0FBQUNFVUFBRUFvQWdBQVFoRUFBQkNLQUFDQVVBUUFBSVFpQUFBZ0ZBRUFBS0VJQUFBSVJRQUFRQ2dDQUFCQ0VRQUFFSW9BQUlCUUJBQUFoQ0lBQUNBVUFRQUFvUWdBQUFoRkFBQkFLQUlBQUVJUkFBQVFpZ0FBZ0ZBRUFBQ0VJZ0FBSUJRQkFBQ2hDQUFBQ0VVQUFFQW9BZ0FBUWhFQUFCQ0tBQUNBVUFRQUFJUWlBQUFnRkFFQUFLRUlBQUFJUlFBQVFDZ0NBQUJDMlZ2NkRTU00xYUw2dEhYMEwzYjBMYmIzS0xRWDU5cUtjNnl0czJ4dXUzTFpMUTZicFQ0VTgvL3JIMThvVmhlTUhhK09IS3VLSEczMFQwbDVKQlNKdGZTM0FnQ3BrUFlCS01xMlRoM29IZC9iTmJxYnE4QnpyZ3NhcjlQaWRWck8vZFZDa2RnWHA4T2ZsWVozbG9ZK094SGFXUnJlY3lwTUVnQmtKSXVhYzdpbDM0T21LL3U0N3gyVmZYbFB0eTJaNDFqMTRkaW13OEVQU29JZkhneCtVQkk0V1J0TjRvdWQweHV6Q3lmMmRUZm5LMFNpcXZOUGpoK3JqaVRxTFozYjFybHRCN1YzcE9hMTRuZWlKbEw4NCtNYUI2YmR0L1BUQ2JrL3ZEdzN4ZThuR1k1VVJqcm0yL1NPM1hzNlBQRHBFLzVRRWovRC9lTHF2QWZHNXVnZFd4T0k5ZnQ1NmVIS0ZQMUtmbFZhWGdGTTdPdCthbUplLzNhcCtHMTAyeTBqdTdoR2RuRTEvT3Urc3ZEcXordnZXRmFaZ3BkdXJDamJPcjUzczg3K1NpbWJWZDB3elB2MHV6VUplVXRBYW13OUZuSTdMSVZaT2gvMHVoZmFmencrOThFM3FoTCtyaG9NNmVDWU0wYno3SytVZW1CbFpRdWUvVlhhM1FUdWtHZDdmWGJoRzdNTFUzUDIvNnB1cmUxVEJuaFMvN28zRFBQYUUvSC82cVlSM2dSOEZTQ0ZBdUhZWGNzcnRRLy8zcVU1Z3pzazVYUmhzNnFGTXdxMGZ6SGYzUnY0M1lhNmhMNGp3OUlwQUZmMGNtLzVYdHVybWpjTWtxWnVHcEdWa0svVHI5Z3hyS016SVY4S1NKa2xXMzJ2N3ZEckhXdTNxa1V6Q3BJeFVEeG5USTcyYjFOZE1EWjdTVVdzcFc4dnBrMEF2djIxckxkdUsyeVRuVFp2T0lFR3RuY2tjUFI1RmhjQlNFUGZYVlpaNGRlOEF6ZXNvL08rMGZvRE5XZlZwWlg5c2ZINnQxZ2Vlck5xZjFrNGdlOUhUM3FjVDIvN2V0YnZaeFJZenpPRkoyTWxkdHptK3FGZWgwM3FqeEpwcTdRbWN0K0tTdTNEZi9LZnVWMWFKZktXNTRMcCtlZWRWZGlVOVNYQlo5ZlZKdkROYUV1REFJenI2WDV1YW9GRjZpbkxabFhYRDAxa0FBcXpyQlA2U0J4R1E3cjc4eWJmcWwzMWVzZDZuWllGMC9NVDlVNW1EZmRlMFV2emw2ZytITHQ1Y1htMHBRZC9HcGc5QU8xeWJVdHVhcFhVaVo0bU43Nlh1emhIY3c1Y1UyWU5aeFFJYWVrN1N5dXE2elVIZ3E3bzVaNlppTC81aFZuV2VkZmtheC8reUZ2VmUwNjEvT0JQQTdPZldaK2Rrbi91NVYwWkwxRzNmeHU3cXArN2xWZjBUeFZwNmtobFpPNUsvVG1kODY3SjE1dE8ydGo4eWZtdGRiL0l4NGVDOC81aG9ubllwajRMak8zdW1qS3dCZVpjbWtlZTJ6cXBmK0tIYTV3MnkzVUpIVllDVW1iaGhycS83d25vSFZ1WVpaMC9PYjg1cno2K3QvdUdZWnEvTzhGSTdPYkZGWkVXVzB0NkZxWU93SSt1eUlSMWpNMHhZNGpIYlUvSzNROUdnWkMrYm4yNW9qYWdPWWgrd3pDdjlwcktMS2Rsd2JSOHZXT1ZVbyt2cnRsWkd0SStQQm5NdXhKNFFEdkgyTzR1N2NNRDRkaUhCNEx2N1F2c09SVXVLUXNmcllyNFFqRmZNQllJeDF4Mmk5dHV5ZmRZaTNLc3hUbTJycTF0UGRzNGVoWFpoM1J3NUp0c3VDa1o0ejhOdnRiWjJidkl2dnVrV2NZaWdmZ2RLQTgvK0diVnMxUHk5UTVmTUMyLy95OU8xQVVOSitUeEsvTXUxSjFLdFBWbzZLazExWHJISm85NUE2QjluYld2TER6dnZkby9iYXp6TmZFL3VHRkQwQXAvdEtUOHpQL1V0YlY5UkNmbm1PN09NZDFjZllvY0xUdjFxSHVoL2VJTGs3aG82NllSV2YvMVpyS1d5QU5KOWR6NjJtc0hlVVozMC9tTWVHRXIrK05YNXQzL1dxV2hvNFozY3Q0ektsdmo1WlJTNGFqNjl1THlzSmtHZnhxWU53QlR0VWIvRjIyb3UvdVZ5dnF3NXVYaC9yTHcvckx3a3EwK3BWVDdYTnVFdnU2SmZkeFg5SEpyVC9odGptU1AwdHc0elB2RFZWVW1tWTRHR0JLTHFWdVdWR3gvb0szSG9mTzdlYytvN0plMitEWWVDc2I1NSsxV3RmQmEvZVhFVDYycDNuclVYSU0vRFV3YWdIYTV0dTZGaHQvYkN4dDl0NzVja2FqM2NLdzZzbWhEM2FJTmRWbE95NlQrbmhtRFBSUDZ1Rk8yaE1waVVRbVpzbllPSGZOdGwvVndhZDlQUzVKSVZObm5IbW5wZDVFd0xmanRQTHlxK3VGVkNSaHp1S3F2Ky9YWmhSb0hQdmJYNmtmL21zUkJqNzJud3crdnFuN21tanlOWTIxV3RlamFnbUh6VHNUNXFYenVXUDBOaFhhV2hoNWZiYUtaUDQyWmE4ajdTNWQwTVR6MFVWWVh2V041d3M3K2pkVUZZeTl0OWszK1ExbUh4NDQvOEhyVnJoT3BHRGNmMDgybFBkb1l2K1RkWXdCU1lQN2FtZzBINC8wVWY0YUI3UjF4YnVQY3ZkRCtpTzZFbEVoVTNieTRJbWpXWjRxWU5BQjkyaHFPN1l1YmZVME4raWZLcWRyb0w5K3RHZnZjcWFTK1NvUFV6TktaTXNDVDdaSzZ4aHJwTHhwVE55K3VDT2dPK1Q0eVByZEhtL04velBydDlBSzlnU2FsMUx4LzFId2M5MEJUNnBrMEFGMWFHVjc3K3BIdUJ3RVQ4am90MHdZWkRzQWJueGxlSmU5MVdxWU5aRDRvMHRpdUU2SEhkQWVhM0hiTGI2Y1huUHZQM0h4UjFtVTlOS2NqN2prVmZ1UXQwODM4YWN5a0FlaVFaemdBS1h2UVZRcE1HZURKTWY3Qi9JbS9WY2QvVSt0TFBDRUE2ZTdwZDJzK09hTDUrVzlzZDljdEZ6VTVFRnFVYmYzbEpKMTdERXFwYUV6ZHNyaENlMEpLYXBnMEFOa3V3Mi9NcTN1TlprSWFRL01IeXNNYkRnWmYydUl6ZXVDWWJxNExDaEs4MXhDUVN1R28rdlpMRmRyUDduNTZVbDdiSnJiYitsVXp0cUo1ZGwzdHVoSnp6YkQ0S3BNR1FPTnNQcUNGbmhHV2NCM3liQnFYbkl1MytKVlNMMi8xRzUzV2FiR29tY081Rll6MHR1TjQ2R2QvMTV4cFUrQ3gvdnBzYThvbTluWFBHS3g1ZlZ4U0huNG9IUmJabURRQUdtWU85MmJHcHFFemgzczFubnl3ZUl0UEtYVzBLckp1ditFUEhXd0xnUXp3eE45cnRoL1RuR3MvZlpEbjZuNy9iMytJYkpmbCtXbm51VDNRbEZoTXpWNVNvYkhTT1BWTWVzcjBod3ovN1BvVk94NGVsd2w3QjJtY2puZWRDRzM3MTEvOWhrc0JRM3EwU2U2U1l5QUZRcEZZYzFiYlBqZTFvUEdOdDU5TnlPdVVyemswK3JzTmRlOThZZmJCbndZbURZRGVzOThlSFovN3pEVjUyaE8yekdCRVo2ZkdGTmpHSi8ybDIzd2F2d096V0JDQTlMZjVTT2pwZHpVSGdqcm0yNTZjK00vN3ZSZGQ0THh6cE9hdUQ0Y3JJdytzck5RN052Vk1Hb0REbFpwVGV1NGZrN1A3d2VLNVkzUFNkTC83bTdSR1l4WTN1dmQ3dWk2NlpvL2grYUF6Qm50Y3lkbDJGRWlseC81YXZldUU1a0RRZHkvSnZ2aENwOE5tV1hTdC9nTm9iM3U1b2taM3A5TFVNK2xaY2s4emRxbnNYR0I3K3VxODBzZmFyYjY5OE02UjJmMktXM2hQdC9nNWJaWnZEakVjZ00xSFFtYzhZRWhqRkNqZlk3MG1DUThlQUZJc0VJN2R2TGhDYjRjcnEwVXRuRkh3bzNFNS9YVm5sUHhwWTkzYnV6VWZXdGtpVExvWDBDYmRXYjFmY3RnczQzcTZ4L1YwSzZYS2ZkRVBEZ1EvT2hqODZHQnc0K0ZncGRiNFVncE03T3ZXZU5MUVY2ZCtydGpoWHpBOTMrZ24rbG5EczE3ZWFyZ2NnTmxzT0JpY3Y3Ym0vakZ4YmZOd2hyNXRIWDJ2MER6N0g2K096SGsxRFdiK05HYlNBR3c4RlBTSFlva2F6Vy9sdFY3VjEzMVZYN2RTS2haVG41OEtOOFRnbzBPQjdjZEM1dG1qVldOTlZpeW1sbndsQUZYMTBiZDMxMS9UMzloMnF1Tjd1OXZtMkU3VVpNNTZPb2oxOEtycVNmMDhHaHRLTnNmdFN5dE4rK0d5S1NZTmdEOFUrOXVlK2tuOUV2ODhTSXRGOVM2eTl5NnlONXh0L2FIWXhrUEJEdzRFMSs0UHJOMFhhTUdaVzRWWjFnbDlEQS9DckQ4UU9Pdjlrc1ZiL0VZRFlMZXFHNFo2Vy95QnBUYXJpczNybUtRdjdwaDdKTVc5ejdCdkoxMzRRN0ZibGxTOGQwZWJsQTMvdnJUWnQzSm4rbDFBbS9RZWdGTHFoWTJHRjdWcThEZ3NvN3U1SHZ5UG5GVzNGcFkvMGY2ZE85cmNOenBiZS9wWGMxdzMxS3V4MTNSVHcvMHJkL28xWWphTGJTR1FLZGJ1Q3p5M3ZqWTFyM1dxTm5yUGlzclV2RlppbVRjQXIzM3FQMVNSMHVFSXA4MHl0cnZydnlmbkgveFJ1M1YzRjMxclJGWXFud09qTWY0VGlhcWxXOCtlU1Y4dzlycnh6eU9EMmpzR3RjK1FCZFhBZzI5V0hTaFB4ZWJ0ZHk2dk9GMlhsdGRpNWcxQUpLcCsvSGJMYktSbnNhaEx1amovZUYzQnNVZmIvWFJDYnFIeEc3Tkc5VzNyR05iUjhGS3NkL2JXbjZ4dDhxK2R4bHdneFJNQ2tFRnFBN0haUzVMeWpKREdYdG51WDdvdC9RWi9HcGczQUVxcFAyK3FXMS9Ta3BzODU3bXRQN3c4OThDUDJqMTBlVTVTcDhucmJjbDU3bFA4Vzd2cU5XNUpYVC9VWXpmMVh3ckFnRFZmQkJadXFFdmUxeS8zUmU5WVhwbThyNTlzcHY1ZGo4YlVyUDh0cjZwdjRXdXJMS2ZsaVFsNW4zNi83ZGM2SjJXL0JLdEYzV2g4L1Zjd0VudGwrN2tDRUl6RVh2M1U4QWVUdGptMjhiMVpFSURNTVhkbDFSSGRoYVhuZGUrS3lyU2VPR2ZxQUNpbDlwZUZwLzZ4VEh1ajF3VHFYbWhmZjAvUjNhTTBGNGlmdzdoZTd2YTVobTg3djczNy9CL3dHUVVDcXV1ajMxbWFsSUdnTnorci81OVBVakZYSlhuTUhnQ2wxSm92QXROZktEZkRjeFhzVnZXcmIrUS9kWlhtQXlLYW9yY1o1MHViejM5eVg3T24vbFRUTndtYU1xbWZPMTkzRDNUQWhGYnRxdi96cGdTZnFhdVMxcFZVU28vZjg5Yys5WTk3L3ZSeGN6eno2d2VYNVh6L01wMUZobWVWNjdaK1k0RGg1UTV4VHZJSlI5V3k3WWIvM3J2c2xobURFNzhDQTJoQjk2Mm9MRTNvV00zM1hxczZXbVdLTTFKenBFY0FsRkxyU2dKRG5qbjUrazVUN0xQeDVNUzhTN3RyUGliMEROTUhlVFFXUE1jL3paOVJJRUFwVmVHUGZuZFpaYUsrMnQvMjFQLytveVRlVzA2WnRBbUFVdXBFVFdUUzcwOVArMVBadnJKVXpPMDlCNnRGdlhCZHE0VHNWSkdNK1QrTnZiOC9vSEVIN09zWE9udTBNZWtxY1VEUHF6djhTNXBZTjJOSWJTQjJhL0pubDZaR09nV2d3Zkx0L3Q1UGx0NzJjc1huemRneHRQazZGOWptakdudURlRXVyZXdqdXhpK2txajBSK1BmY1RBV1UzcVRsSGxNR0RMUFhjc3JOZTZLbmVFSGIxUWRUTzBhMWVSSnZ3QW9wY0pSdFhCRFhaK2ZsMDVZZUhyWk5uOUwzUitlTTZhNWl3Tm1qZkJxN0ZXeVlvYy9ZT1JiMW5oU3ZGSnE1dkNzZE5sR0c0alQ2YnJvM2E5VU51Y3IvR05mNFBrUFVyVERSQXFrWlFBYXhHTHFyVjMxMDE4b0szN2srSTB2bGkvWjZrdnhWbnlGV2RicGc1cDFzM1JtMHViL05MYnhVRkJqME95Q0F0dWwzUkp6bndNd2p5VmJmU3QyYUM3YzlZZGlzNWRVeEZwK1FtTENaTUk0YjFWOTlNVlBmQzkrNHJOWjFhRDJqdEZkWGFPNnVrWjJkUlZsSnoxdlV3ZDZ0Q2NDait6aTZ0YmE4TS8vWkczMG5iMkc3NFF2MmVKLzZITERNNWRtamZDK3V6ZlZqemFOUkpWOTdwRVV2Mmp5Wk5pM2t4bWVYRk9qTWZWT0tiVjBtMy92NlJhK0FabFltUkNBTDBXaWF2T1IwT1lqb2ZscmE1VlNQZHZZUjNWMWplenFITm5GbGFTZHdjZjFjdHV0U205TFhyM2J2MHUzK2lMR1gyN3hGcDlHQUtZTjlONjF2TElGdDhnR2trRjdZYWtaVnFRbVZrWUY0QXg3VG9YM25BbzN6TllxenJHTjdPb2MxZFYxYVRmWGdIWUplMGhrbHRQU3I5aXg3WmpoWjVDNjdaYnBXblB0OWFaMTdqZ2UybGthNmxkc2JLZlBiSmRseWtEUFh4SzlnZ2FBU2FUeFBRQkRTbXNpeTdiNTcxMVJPZWlYSjlvL2V2eldseXRXZjE2djhWSDZxd1ozME5rL2VmSUFUNTdiOEEvL2NHVmsvUUhOTVJtOWNzd2F6b0lBSUdObDhoVkFVMHBySW9zMjFDM2FVTmU1d0hiUHFPdzdMc2x1em96K0N3cDBmb1o2NHorZDhtM1JaNUwxZUttenVxeUhxMk8rTFhsN2FRRm9RVkt1QU03cVVFVms3c3FxZmo4L3NlbXcvcWJUSFkwL1BxeGRycTNoYWZYbVo3V29tY05ZRUFCa0p0RUJhRkJTSGg2MzRQVE9Vc1BqK0ExeVhJYXZIbTRZNXJXbHp3OStGdHRDQUJrcWZjNUR5VlRaakgxQ05JYVBia3FyUmJhOWkreEplaEFDZ0paRkFQN3AvZjJCSGNkMUxnS00za2tlMnRIUnYxMmFQWGRYNzQ0RkFKTWpBUCttdCtqSkZ6STJOVGdkNTlWOGM0alhhV05mQ0NEVEVJQi8wM3ZlZ00vSU9pbTdWVjAvTlAwK1RiZnlXcS9xbHg1M3JRSEVqd0Q4bTFYck02NmhiRXpvNDJtVC9BMHFrb0ZSSUNEem1QUmtOS0NkWTltM1dnL3JtTko3ajUyMVp2UWIyaGgyVnRxZVJxL3M3VTdUZEFGb2lrbC9wVzFXTlhXZ1o5UDlSYXR2THh6WDA1MkNmWW10Rm5WbGI1MVJqcEx5ZURlSGF1VzFYcDIyQXlrT20rVzZJZWxhTHdCblpkSUFmR2xjVC9mcTJ3dDNQMWg4Nytoc2piMFQ0amR0a0tkemdlRWxYYkdZMm5JazNybEQ2WDRybGVkRUFobkc3QUZvMExPTmZmN2svR09QdG52eHhsWlg5bkhiRS8ydXU3YTJMNWhlb0hIZ3JwT2hxdnA0NTRHbSt6RDYwSTRPbzl2SkFUQ3o5QWhBQTYvVGN2MVE3NnBiQzQ4KzJ2NzVhUVVUK3JqZHpYc2dWNFBSM1Z3ZjNsdFU0Tkg1VWJ6elJid3pSM3RseEhLcWRHOFlnTWJTY2pPNG9tenI3UmRuM1g1eGxpOFllMjlmWU8yK3dQdjdBNXNPaDRJR2Qrc2UzTUh4ME9XNTB3WjZ0Tzh4TEl2N2NidDY0eWY3eThMZG5palZPUEM4N2h5Wi9leVVmS05IM1RqTSsxOXZWaVZrRjFVaGJGWVZtNWZjL2Z0NDVneTBwV1VBdnVSMVdpYjBjVS9vNDFaS0JTT3gzU2ZDbjVhR1BqMGVPbGdST1ZvVk9Wb1ZxYXFQK2tNeGZ5aG1zMWl5WFpac2w2Vnp2cjFYa1gxd0I4ZkV2dTR1clpyMTdSK3RpcnkvUDY0ckFLdEYzYWkxcFpyZTg5empzWHliLzFmZnlEYzY4N1ZoRzd2NEgwa1B3TXpTT3dDTk9XMldnZTBkQTl1bmJwQjYvdHJhYUh5WEhHTzd1em9aM3pSVUtiVjBhN0lDVUZvVCtlQkFZR1FYdzAvOW5UWGNTd0NBekpCTzl3Qk1wY0lmL2QySGRYSCtZYjN4bjVMeThDZEg5UGVwUHEvNHg2OGFtenpBazV2TTZWZ0FVb2JmWkUwUHZsRlZIZC84bjRZSEsycThSUEkrL2pkWXZ0MGZNLzZJVTQvRGNxM1d3eXdCbUEwQjBMR3VKTEJ3UTd3Zi82Y085R1E1ZGU0eUorOEdRSU1qbFpHUER1bGNZY3hLcSsyc0FUU0ZBQmgydkRveTQ0WHkrRDg3NjQzL0hDZ1BOK2M1WlhIU0d3VWEyY1hWdFhYbTNEMEN4Q0lBeGxUWFI2LzVROW14dURlQTYxeGd1N1NiNFJ1dFN2ZlViUHhWZkJwSFdTeGNCQUNaZ0FBWVVGWVh2ZXk1MHh1TkRKdk1ISmFsdDhnZzJlTS9EUTVXUlBTdU0yWU85NlpnZ3lZQVNVVUE0clh4VVBDaStTZU5Uc3ZSMi83ellFWGtZNjNSZVExNmx4cGRXOXMxcHBBQ01CV1RCbUQ3c2RDWTM1ejZ6YnBhdlllMEpGWjlPUGI0NnVwTGZuMXFYMW04RzM4MitQcUZ6cDV0ZE1iSzlVWm05R2hmYXJBdEJKRHVUQnFBYUV5dDNSZTQ2NVhLam84ZEgvbnJrMCt1cWRsMlRPZUJ2YzBVaXNUK3Nzblg2OG5TUjk2dURobmNaMEkxNCttUHFSbi9hYkMvTEx6MXFNN1Bkdm9najhmQk1CQ1F4c3crbHlNYVUrdExndXRMZ2crOVdkVXUxM1paRDllWWJxNHgzVng2bjZ6amQ2QTgvSmROdmdVZjFNVi92L2NNTHJ0bHhoQ2QrZktIVWpqKzAyRFpOdi9nRG9aWFVPZTZyWk1IZUY3YW5McUxGUUNKWmZZQU5IYThPdkxpSjc0WFAvRXBwZHBrVzBkMGNnN3Y1QnpXeWRHLzJIRmhLN3ZlQXgwYnF3dkdQajRVWExzdnNIS25mM1BjdS93M1pWSS90OTRPbzNycnM1cGo2VGJmVHlma2FoeDQwM0F2QVFEU2wwWE5PZHpTN3lFQjNIWkx6eUo3OTBKN3AzeGJwM3hieDN4Ym15eGJnZGZheW12TmNWbGNkb3ZEcGh4V1N5U21ndUZZSUJLckM4Uk8xVVZQMVVaS2E2SjdUNGYzbkF6dlBobmFXUm9Lczg4bEFERXlKQUFBQUtOTWVoTVlBSkJzQkFBQWhDSUFBQ0FVQVFBQW9RZ0FBQWhGQUFCQUtBSUFBRUlSQUFBUWlnQUFnRkFFQUFDRUlnQUFJQlFCQUFDaENBQUFDRVVBQUVBb0FnQUFRaEVBQUJDS0FBQ0FVQVFBQUlRaUFBQWdGQUVBQUtFSUFBQUlSUUFBUUNnQ0FBQkNFUUFBRUlvQUFJQlFCQUFBaENJQUFDQVVBUUFBb1FnQUFBaEZBQUJBS0FJQUFFSVJBQUFRaWdBQWdGQUVBQUNFSWdBQUlCUUJBQUNoQ0FBQUNFVUFBRUFvQWdBQVFoRUFBQkNLQUFDQVVBUUFBSVFpQUFBZ0ZBRUFBS0VJQUFBSVJRQUFRQ2dDQUFCQ0VRQUFFSW9BQUlCUUJBQUFoQ0lBQUNBVUFRQUFvUWdBQUFoRkFBQkFLQUlBQUVJUkFBQVFpZ0FBZ0ZBRUFBQ0VJZ0FBSUJRQkFBQ2hDQUFBQ0VVQUFFQW9BZ0FBUWhFQUFCQ0tBQUNBVUFRQUFJUWlBQUFnRkFFQUFLRUlBQUFJUlFBQVFDZ0NBQUJDRVFBQUVJb0FBSUJRQkFBQWhDSUFBQ0FVQVFBQW9RZ0FBQWhGQUFCQUtBSUFBRUlSQUFBUWlnQUFnRkFFQUFDRUlnQUFJQlFCQUFDaENBQUFDRVVBQUVBb0FnQUFRaEVBQUJDS0FBQ0FVQVFBQUlRaUFBQWdGQUVBQUtFSUFBQUlSUUFBUUNnQ0FBQkNFUUFBRUlvQUFJQlFCQUFBaENJQUFDQVVBUUFBb1FnQUFBaEZBQUJBS0FJQUFFSVJBQUFRaWdBQWdGQUVBQUNFSWdBQUlCUUJBQUNoQ0FBQUNFVUFBRUFvQWdBQVFoRUFBQkNLQUFDQVVBUUFBSVFpQUFBZ0ZBRUFBS0VJQUFBSVJRQUFRQ2dDQUFCQ0VRQUFFSW9BQUlCUUJBQUFoQ0lBQUNBVUFRQUFvUWdBQUFoRkFBQkFLQUlBQUVJUkFBQVFpZ0FBZ0ZBRUFBQ0VJZ0FBSUJRQkFBQ2hDQUFBQ0VVQUFFQW9BZ0FBUWhFQUFCQ0tBQUNBVUFRQUFJUWlBQUFnRkFFQUFLRUlBQUFJUlFBQVFDZ0NBQUJDRVFBQUVJb0FBSUJRQkFBQWhDSUFBQ0FVQVFBQW9RZ0FBQWhGQUFCQUtBSUFBRUlSQUFBUWlnQUFnRkFFQUFDRUlnQUFJQlFCQUFDaENBQUFDRVVBQUVBb0FnQUFRaEVBQUJDS0FBQ0FVQVFBQUlRaUFBQWdGQUVBQUtFSUFBQUlSUUFBUUNnQ0FBQkNFUUFBRUlvQUFJQlFCQUFBaENJQUFDQVVBUUFBb1FnQUFBaEZBQUJBS0FJQUFFSVJBQUFRaWdBQWdGQUVBQUNFSWdBQUlCUUJBQUNoQ0FBQUNFVUFBRUFvQWdBQVFoRUFBQkNLQUFDQVVBUUFBSVFpQUFBZ0ZBRUFBS0VJQUFBSVJRQUFRQ2dDQUFCQ0VRQUFFSW9BQUlCUUJBQUFoQ0lBQUNBVUFRQUFvUWdBQUFoRkFBQkFLQUlBQUVJUkFBQVFpZ0FBZ0ZBRUFBQ0VJZ0FBSUJRQkFBQ2hDQUFBQ0VVQUFFQW9BZ0FBUWhFQUFCQ0tBQUNBVUFRQUFJUWlBQUFnRkFFQUFLRUlBQUFJUlFBQVFDZ0NBQUJDRVFBQUVJb0FBSUJRQkFBQWhDSUFBQ0RVL3dITEtXZWR0WjFQMXdBQUFBQkpSVTVFcmtKZ2dnPT0iLCAic2l6ZXMiOiAiNTEyeDUxMiIsICJ0eXBlIjogImltYWdlL3BuZyJ9XX0=">
 </head>
 
-<body>
+<body class="app-booting">
+
+<div id="aix-splash" role="status" aria-label="AI 안전평가 시스템 시작 중">
+  <div class="aix-splash-core">
+    <div class="aix-splash-orbit"></div>
+    <div class="aix-splash-kicker">AI SAFETY COPILOT</div>
+    <div class="aix-splash-title">현장 위험성평가 VISION</div>
+    <div class="aix-splash-sub">안전 분석 엔진을 준비하고 있습니다</div>
+    <div class="aix-splash-line"><span></span></div>
+  </div>
+</div>
+
 
 <div class="aix-topbar" aria-label="AI 안전 평가 시스템">
   <div class="aix-brand-row">
@@ -347,6 +379,34 @@ details>summary:before{content:"✦";margin-right:8px;color:#62d7ff}
   background:rgba(255,255,255,.045)!important;border:1px solid rgba(111,191,255,.14)!important;
   color:#d8eaff!important;font-size:12px!important;line-height:1.55!important
 }
+
+#chatgpt-ai-panel .ai-processing{display:none;margin-top:11px;padding:14px;border-radius:17px;background:radial-gradient(circle at 10% 20%,rgba(49,210,255,.09),transparent 30%),linear-gradient(145deg,rgba(7,21,40,.95),rgba(12,26,51,.95));border:1px solid rgba(91,205,255,.18);box-shadow:inset 0 1px 0 rgba(255,255,255,.035)}
+#chatgpt-ai-panel .ai-processing.on{display:block;animation:aixProcessIn .22s ease-out}
+#chatgpt-ai-panel .ai-process-top{display:flex;align-items:center;gap:12px}
+#chatgpt-ai-panel .ai-process-visual{width:48px;height:48px;flex:0 0 48px;border-radius:16px;position:relative;display:grid;place-items:center;overflow:hidden;background:rgba(62,206,255,.07);border:1px solid rgba(83,215,255,.19)}
+#chatgpt-ai-panel .ai-process-visual:before{content:"";position:absolute;inset:-13px;background:conic-gradient(from 0deg,transparent 0 28%,rgba(73,220,255,.85) 42%,rgba(121,99,255,.8) 52%,transparent 67%);animation:aixProcessSpin 1.15s linear infinite}
+#chatgpt-ai-panel .ai-process-visual:after{content:"";position:absolute;inset:7px;border-radius:11px;background:#09162a;box-shadow:inset 0 0 18px rgba(74,210,255,.08)}
+#chatgpt-ai-panel .ai-process-dot{position:relative;z-index:2;width:9px;height:9px;border-radius:50%;background:#80ebff;box-shadow:0 0 18px #58deff,0 0 30px rgba(112,98,255,.7)}
+#chatgpt-ai-panel .ai-process-copy{min-width:0;flex:1}
+#chatgpt-ai-panel .ai-process-kicker{font-size:9px;letter-spacing:.13em;color:#61dfff;font-weight:950}
+#chatgpt-ai-panel #ai-process-title{margin-top:2px;font-size:13px;color:#f2f9ff;font-weight:900;line-height:1.35}
+#chatgpt-ai-panel #ai-process-detail{margin-top:3px;font-size:11px;color:#89a3bd;font-weight:700;line-height:1.35}
+#chatgpt-ai-panel #ai-process-percent{color:#8eeaff;font-size:13px;font-weight:950;min-width:42px;text-align:right}
+#chatgpt-ai-panel .ai-process-track{height:5px;margin-top:12px;border-radius:999px;overflow:hidden;background:rgba(255,255,255,.055)}
+#chatgpt-ai-panel #ai-process-bar{height:100%;width:0%;border-radius:999px;background:linear-gradient(90deg,#31d6ff,#5d8cff 55%,#846eff);box-shadow:0 0 14px rgba(76,200,255,.35);transition:width .35s cubic-bezier(.22,.8,.24,1)}
+#chatgpt-ai-panel .ai-process-pulse{display:flex;gap:5px;margin-top:9px;align-items:center;color:#6f8aa5;font-size:10px;font-weight:800}
+#chatgpt-ai-panel .ai-process-pulse i{width:5px;height:5px;border-radius:50%;background:#57ddff;opacity:.28;animation:aixPulse 1.15s ease-in-out infinite}
+#chatgpt-ai-panel .ai-process-pulse i:nth-child(2){animation-delay:.15s}
+#chatgpt-ai-panel .ai-process-pulse i:nth-child(3){animation-delay:.30s}
+#chatgpt-ai-panel .ai-processing.success{border-color:rgba(71,226,150,.26)}
+#chatgpt-ai-panel .ai-processing.success #ai-process-bar{background:linear-gradient(90deg,#42dfa1,#5ee7b2)}
+#chatgpt-ai-panel .ai-processing.error{border-color:rgba(255,102,120,.25)}
+#chatgpt-ai-panel .ai-processing.error #ai-process-bar{background:linear-gradient(90deg,#ff6678,#ff8d6d)}
+@keyframes aixProcessSpin{to{transform:rotate(360deg)}}
+@keyframes aixPulse{0%,100%{opacity:.22;transform:scale(.8)}50%{opacity:1;transform:scale(1.18)}}
+@keyframes aixProcessIn{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){#chatgpt-ai-panel .ai-process-visual:before,#chatgpt-ai-panel .ai-process-pulse i{animation:none}}
+
 @media(max-width:560px){
   #chatgpt-ai-panel{padding:14px!important;border-radius:20px!important}
   #chatgpt-ai-panel .ai-photo-actions{grid-template-columns:1fr 1fr}
@@ -386,6 +446,19 @@ details>summary:before{content:"✦";margin-right:8px;color:#62d7ff}
   </div>
 
   <button type="button" class="ai-btn ai-run" id="ai-share-btn">⚡ AI 위험 분석 · 자동 반영</button>
+  <div class="ai-processing" id="ai-processing" aria-live="polite">
+    <div class="ai-process-top">
+      <div class="ai-process-visual"><span class="ai-process-dot"></span></div>
+      <div class="ai-process-copy">
+        <div class="ai-process-kicker">AI ANALYSIS ENGINE</div>
+        <div id="ai-process-title">분석 준비 중</div>
+        <div id="ai-process-detail">현장 정보를 동기화하고 있습니다.</div>
+      </div>
+      <div id="ai-process-percent">0%</div>
+    </div>
+    <div class="ai-process-track"><div id="ai-process-bar"></div></div>
+    <div class="ai-process-pulse"><i></i><i></i><i></i><span id="ai-process-foot">잠시만 기다려 주세요</span></div>
+  </div>
   <button type="button" class="ai-btn ai-reset" id="ai-clear-btn">↺ 분석 초기화</button>
 
   <!-- 자동화 코드 호환용: 화면에는 노출하지 않음 -->
@@ -1410,9 +1483,39 @@ ${JSON.stringify(items,null,2)}
     });
   }
 
+  let aiProgressHideTimer=null;
+
+  function setAiProgress(percent,title,detail,mode='working'){
+    const box=document.getElementById('ai-processing');
+    const bar=document.getElementById('ai-process-bar');
+    const pct=document.getElementById('ai-process-percent');
+    const ttl=document.getElementById('ai-process-title');
+    const dtl=document.getElementById('ai-process-detail');
+    const foot=document.getElementById('ai-process-foot');
+    if(!box) return;
+    if(aiProgressHideTimer){clearTimeout(aiProgressHideTimer);aiProgressHideTimer=null;}
+    box.classList.add('on');
+    box.classList.toggle('success',mode==='success');
+    box.classList.toggle('error',mode==='error');
+    const p=Math.max(0,Math.min(100,Number(percent)||0));
+    if(bar) bar.style.width=p+'%';
+    if(pct) pct.textContent=Math.round(p)+'%';
+    if(ttl && title) ttl.textContent=title;
+    if(dtl && detail) dtl.textContent=detail;
+    if(foot) foot.textContent=mode==='success'?'평가표 반영이 완료되었습니다':mode==='error'?'오류 내용을 확인해 주세요':'사진과 현장 데이터를 안전하게 분석 중입니다';
+  }
+
+  function hideAiProgress(delay=0){
+    const box=document.getElementById('ai-processing');
+    if(!box) return;
+    const hide=()=>box.classList.remove('on','success','error');
+    if(delay>0) aiProgressHideTimer=setTimeout(hide,delay); else hide();
+  }
+
   function setAiBusy(busy){
     shareBtn.disabled=busy;
-    shareBtn.textContent=busy?'⏳ AI 분석 중...':'⚡ AI 위험 분석 · 자동 반영';
+    shareBtn.textContent=busy?'◌ AI 분석 진행 중':'⚡ AI 위험 분석 · 자동 반영';
+    if(busy) setAiProgress(6,'분석 준비 중','현재 일시와 현장 데이터를 확인하고 있습니다.');
   }
 
   async function runAiRiskAnalysis(){
@@ -1424,19 +1527,27 @@ ${JSON.stringify(items,null,2)}
     try{
       // AI 분석 요청 시점의 실제 일시를 평가표와 AI 컨텍스트에 즉시 반영
       const liveDateTime = setCurrentDateTime();
+      setAiProgress(14,'실시간 정보 동기화',liveDateTime.replace('T',' ')+' 기준으로 현장 정보를 갱신합니다.');
 
       status.textContent='🕒 '+liveDateTime.replace('T',' ')+' · 기상청 실황 확인 중...';
+      setAiProgress(24,'기상청 실황 확인','현재 위치의 기온과 체감온도를 불러오고 있습니다.');
       const weatherNow = await setWeatherAndTemperature({forceRefresh:true, forAI:true});
 
       if(weatherNow?.ok){
-        status.textContent=`🌡️ 기온 ${weatherNow.temperature}°C · 체감 ${weatherNow.apparent_temperature}°C 확인 완료\n⏳ 사진 최적화 → AI 위험 분석 중...`;
+        status.textContent=`🌡️ 기온 ${weatherNow.temperature}°C · 체감 ${weatherNow.apparent_temperature}°C 확인 완료
+⏳ 사진 최적화 → AI 위험 분석 중...`;
+        setAiProgress(36,'기상 정보 반영 완료',`기온 ${weatherNow.temperature}°C · 체감 ${weatherNow.apparent_temperature}°C`);
       }else{
         status.textContent='⚠️ 실시간 날씨를 불러오지 못해 기존 기온값으로 AI 분석을 계속합니다.';
+        setAiProgress(34,'기상 정보 확인 완료','기존 기온값을 사용해 분석을 계속합니다.');
       }
 
+      setAiProgress(46,'현장 사진 최적화',`${photoFiles.length}장의 사진을 분석용으로 준비하고 있습니다.`);
       const prepared=await prepareShareFiles();
       const images=[];
       for(const f of prepared) images.push(await fileToDataURL(f));
+      setAiProgress(58,'사진 전송 준비 완료','위험요인과 평가표 항목을 함께 AI에 전달합니다.');
+      setAiProgress(68,'AI 위험요인 분석','사진의 객관적 사실과 허용된 평가항목을 대조하고 있습니다.');
       const response=await fetch('/.netlify/functions/analyze',{
         method:'POST',
         headers:{'Content-Type':'application/json'},
@@ -1447,6 +1558,7 @@ ${JSON.stringify(items,null,2)}
           context: formContext()
         })
       });
+      setAiProgress(82,'AI 판단 결과 수신','신뢰도와 사진 근거를 검증하고 있습니다.');
       const data=await response.json().catch(()=>({}));
       if(!response.ok) throw new Error(data.error||`서버 오류 (${response.status})`);
       if(!data || (!Array.isArray(data.selected_values) && !Array.isArray(data.review_values))) {
@@ -1454,9 +1566,14 @@ ${JSON.stringify(items,null,2)}
       }
       resultText.value=JSON.stringify(data,null,2);
       resultText.dispatchEvent(new Event('input',{bubbles:true}));
+      setAiProgress(93,'평가표 자동 반영','80% 이상 항목과 안전안내를 평가표에 적용하고 있습니다.');
       status.textContent='✅ AI 분석 완료. 신뢰도 기준으로 자동 반영합니다...';
       document.getElementById('ai-import-btn').click();
+      setAiProgress(100,'분석 및 자동 반영 완료','현장 재확인이 필요한 항목도 함께 정리했습니다.','success');
+      hideAiProgress(1800);
     }catch(err){
+      setAiProgress(100,'AI 분석을 완료하지 못했습니다',String(err?.message||err),'error');
+      hideAiProgress(2600);
       resultBox.style.display='block';
       resultBox.innerHTML='<b>❌ AI 자동 분석 실패</b><br>'+esc(err.message||err)+'<br><br><span class="ai-muted">Gemini Function 배포 여부, GEMINI_API_KEY, 무료 사용 한도와 네트워크를 확인하세요.</span>';
       status.textContent='❌ 자동 분석에 실패했습니다. 아래 오류 내용을 확인하세요.';
@@ -1818,6 +1935,35 @@ input[type="checkbox"]{width:22px!important;height:22px!important;min-width:22px
   document.addEventListener('visibilitychange', function(){
     if (!document.hidden) syncLiveDateTime();
   });
+})();
+</script>
+
+
+<script>
+/* ===== 앱 시작 화면: 흰 화면 없이 자연스럽게 전환 ===== */
+(function(){
+  const bootStarted=performance.now();
+  let finished=false;
+  function finishBoot(){
+    if(finished) return;
+    finished=true;
+    const splash=document.getElementById('aix-splash');
+    const body=document.body;
+    const elapsed=performance.now()-bootStarted;
+    const wait=Math.max(0,520-elapsed);
+    setTimeout(()=>{
+      requestAnimationFrame(()=>{
+        body.classList.remove('app-booting');
+        if(splash){
+          splash.classList.add('aix-hide');
+          setTimeout(()=>splash.remove(),380);
+        }
+      });
+    },wait);
+  }
+  if(document.readyState==='complete') finishBoot();
+  else window.addEventListener('load',finishBoot,{once:true});
+  setTimeout(finishBoot,1400);
 })();
 </script>
 
