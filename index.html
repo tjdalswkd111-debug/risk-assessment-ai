@@ -231,6 +231,30 @@ button{min-height:42px;touch-action:manipulation}
 .ai-paste button{flex:1;min-height:48px;border-radius:14px;border:1px solid rgba(98,215,255,.22);background:linear-gradient(135deg,#17395c,#202b62);color:#fff;font-weight:800}
 .ai-paste button:active{transform:scale(.99)}
 
+
+#chatgpt-ai-panel .ai-learning-env{
+  margin-top:9px;padding:11px 12px;border-radius:14px;
+  background:rgba(42,185,255,.045);border:1px solid rgba(83,207,255,.13)
+}
+#chatgpt-ai-panel .ai-learning-env-top{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:7px
+}
+#chatgpt-ai-panel .ai-learning-env label{
+  margin:0!important;padding:0!important;font-size:10px!important;font-weight:950!important;color:#9cb5ca!important
+}
+#chatgpt-ai-panel #ai-shared-learning-count{
+  font-size:9px;font-weight:950;color:#63ddff;padding:3px 7px;border-radius:999px;
+  background:rgba(65,209,255,.08);border:1px solid rgba(65,209,255,.14)
+}
+#chatgpt-ai-panel #ai-work-environment{
+  width:100%;min-height:39px;padding:0 11px;border-radius:10px;
+  background:#0a192d;color:#e8f7ff;border:1px solid rgba(83,207,255,.18);
+  font-size:12px;font-weight:900;outline:none
+}
+#chatgpt-ai-panel .ai-learning-env-help{
+  margin-top:6px;font-size:9px;line-height:1.45;color:#69859e;font-weight:800
+}
+
 #chatgpt-ai-panel .ai-env-hint{
   margin-top:7px;font-size:10px;line-height:1.45;color:#7892aa;font-weight:800;
   letter-spacing:-.1px
@@ -445,6 +469,25 @@ body{-webkit-tap-highlight-color:transparent}
       <div class="ai-weather-label">KMA LIVE WEATHER</div>
       <div id="ai-weather-status">AI 분석 요청 시 현재 위치의 기온·체감온도를 자동 조회합니다.</div>
     </div>
+  </div>
+
+  <div class="ai-learning-env">
+    <div class="ai-learning-env-top">
+      <label for="ai-work-environment">AI 인식 작업환경</label>
+      <span id="ai-shared-learning-count">공유 학습 0건</span><span style="font-size:9px;color:#72e8bb;font-weight:950">최종 수정값 학습</span>
+    </div>
+    <select id="ai-work-environment">
+      <option value="">사진 분석 후 자동 선택</option>
+      <option value="나대지">나대지</option>
+      <option value="전주">전주</option>
+      <option value="강관주">강관주</option>
+      <option value="철탑">철탑</option>
+      <option value="건물안">건물안</option>
+      <option value="터널">터널</option>
+      <option value="옥상">옥상</option>
+      <option value="옥탑">옥탑</option>
+    </select>
+    <div class="ai-learning-env-help">AI가 자동 선택하며, 실제 현장과 다르면 저장 전에 수정하세요.</div>
   </div>
 
   <button type="button" class="ai-btn ai-run" id="ai-share-btn">⚡ AI 위험 분석 · 자동 반영</button>
@@ -739,6 +782,9 @@ body{-webkit-tap-highlight-color:transparent}
 
 <p class="iphone-notice">아이폰은 아래 이미지를 길게 눌러 저장하세요.</p>
 <button class="save-btn" onclick="saveImage()">이미지 저장</button>
+<div id="learning-save-status" style="margin-top:8px;padding:9px 10px;border-radius:10px;background:rgba(65,185,255,.06);border:1px solid rgba(65,185,255,.12);font-size:11px;line-height:1.45;color:#7898b7;font-weight:800;text-align:center;">
+  사진을 등록한 뒤 현장에 맞게 수정하고 <b style="color:#78dcff">이미지 저장</b>을 누르면 최종 수정값이 공유 AI 학습사례로 반영됩니다.
+</div>
 <p id="reconfirm-msg" style="color: #d9534f; font-weight: bold; text-align: center; margin-top: 10px; display: none;">⚠️ 다운로드된 이미지의 내용을 다시 한번 확인해 주세요!</p>
 
 <button type="button" onclick="showInstallGuide()" style="background-color: #ff9800; color: white; padding: 12px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; margin-top: 15px; width: 100%; font-size: 16px;">📲 스마트폰 홈 화면에 아이콘 추가 (앱처럼 사용)</button>
@@ -852,18 +898,27 @@ function generateImage() {
 }
 
 function saveImage() {
+  // 1) 사용자가 최종 수정한 평가표 이미지를 먼저 저장
   const a = document.createElement("a");
   const dateVal = getDisplayDateTime().replace(/[: ]/g, '-');
   a.download = `평가표_${dateVal}.png`;
   a.href = canvas.toDataURL("image/png");
   a.click();
-  
-  // 다시 확인이 필요하다는 멘트
+
   const reconfirmMsg = document.getElementById("reconfirm-msg");
   if(reconfirmMsg) reconfirmMsg.style.display = "block";
-  
+
+  // 2) 이미지 저장 시점의 "최종 수정값"을 공유 AI 학습 데이터로 저장
+  if(typeof window.__riskAiLearnOnSave === "function"){
+    Promise.resolve(window.__riskAiLearnOnSave()).catch(err=>{
+      console.warn("AI 학습 저장 실패:", err);
+      const s=document.getElementById("learning-save-status");
+      if(s) s.textContent="이미지는 저장됐지만 AI 학습 데이터 전송은 실패했습니다.";
+    });
+  }
+
   setTimeout(() => {
-    alert("이미지가 다운로드되었습니다.\n작성된 내용을 다시 한번 확인해 주시기 바랍니다.");
+    alert("이미지가 다운로드되었습니다.\n최종 수정 내용은 AI 학습사례로 반영됩니다.");
   }, 300);
 }
 
@@ -1311,7 +1366,7 @@ function showInstallGuide() {
 
   function formContext(){
     const ids=['date','location','what_do','inspector','son_company','mother_company',
-      'danger_ect_point','danger_ect_todo','fake_temperature','real_temperature','region_display'];
+      'fake_temperature','real_temperature','region_display'];
     const o={};
     ids.forEach(id=>{const e=document.getElementById(id); if(e) o[id]=e.value||'';});
     o.assessment_datetime = o.date || '';
@@ -1321,7 +1376,6 @@ function showInstallGuide() {
       temperature:o.real_temperature || '',
       apparent_temperature:o.fake_temperature || ''
     };
-    o.currently_checked = allowedItems().filter(x=>x.currently_checked).map(x=>x.value);
     return o;
   }
 
@@ -1431,6 +1485,9 @@ function showInstallGuide() {
 사진에서 직접 확인되는 위험과 그에 대한 구체적인 대책만 짧게 작성하세요.
 대표 위험 예시는 감전, 추락, 낙하물, 차량충돌, 끼임/협착, 화재·폭발, 미끄럼/넘어짐, 장비충돌 등입니다.
 보호구를 정상 착용하고 있다는 사실은 '위험요인'이 아니라 '확인된 사실'로만 취급하세요.
+23. 서버가 제공하는 공유 학습사례는 작업자가 사진을 등록한 뒤 실제 현장에 맞게 체크항목/추가위험/대책을 수정하고 '이미지 저장'을 눌러 확정한 최종값입니다.
+24. 공유 학습사례는 위험 명칭, 체크항목 매핑, 대책 표현을 참고하는 정답 예시로 사용하세요. 현재 사진의 직접적인 시각근거가 과거 사례보다 항상 우선합니다.
+25. 같은 작업환경이라는 이유만으로 과거 사례의 위험을 복사하지 마세요.
 
 [현재 작업/현장 입력값]
 ${JSON.stringify(context,null,2)}
@@ -1696,6 +1753,15 @@ ${JSON.stringify(items,null,2)}
     return v;
   }
 
+  function isStrongVisualReason(reason){
+    const s=String(reason||'').replace(/\s+/g,' ').trim();
+    if(s.length<12) return false;
+    if(/가능성|추정|의심|일\s*수|수\s*있|보일\s*수|어려움|판단\s*불가|확인\s*필요|재확인/i.test(s)) return false;
+    const hasPhoto=/사진\s*\d+/i.test(s);
+    const hasVisual=/보임|확인|노출|근접|가장자리|개구부|전선|차량|사다리|물기|적치|장비|불꽃|난간|높이|케이블|분전반|파손|미고정/i.test(s);
+    return hasPhoto || hasVisual;
+  }
+
   function sanitizeAiPhrase(value){
     let s=String(value||'').replace(/\s+/g,' ').trim();
     if(!s) return '';
@@ -1821,14 +1887,14 @@ ${JSON.stringify(items,null,2)}
   }
 
   function normalizeAdditionalRisk(aiSummary,auto,allowedMap){
+    const fromAuto=riskPhraseFromAuto(auto,allowedMap);
+    if(fromAuto) return compactRiskText(fromAuto,20);
+
     const raw=sanitizeAiPhrase(aiSummary);
     const compact=compactRiskText(raw,20);
-
-    // "맑은 날씨 + 옥탑 + PPE 착용 확인" 같은 단순 현장 묘사는 위험요인으로 사용하지 않음
     if(containsActualHazard(compact)) return compact;
 
-    // AI summary가 현장 설명으로 잘못 온 경우, 자동체크된 '주요 위험요인'에서만 안전하게 재구성
-    return riskPhraseFromAuto(auto,allowedMap);
+    return '';
   }
 
   function matchedCountermeasure(risk, aiGuidance){
@@ -1860,6 +1926,117 @@ ${JSON.stringify(items,null,2)}
     return g || '안전조치후 작업 진행';
   }
 
+  /* ===== 공유 현장 학습: 이미지 저장 시 최종 수정값을 서버에 축적 ===== */
+  window.__riskAiLastDecision = null;
+
+  function setLearningSaveStatus(msg, good=false){
+    const s=document.getElementById('learning-save-status');
+    if(!s) return;
+    s.textContent=msg;
+    s.style.color=good?'#65ddb1':'#7898b7';
+    s.style.borderColor=good?'rgba(75,220,165,.18)':'rgba(65,185,255,.12)';
+  }
+
+  async function refreshSharedLearningCount(){
+    try{
+      const res=await fetch('/.netlify/functions/learn',{method:'GET',cache:'no-store'});
+      const data=await res.json();
+      const el=document.getElementById('ai-shared-learning-count');
+      if(el && data?.ok) el.textContent=`공유 학습 ${Number(data.total||0)}건`;
+    }catch(e){}
+  }
+
+  function trainingImageDataURL(file,maxEdge=640,quality=.52){
+    return new Promise((resolve,reject)=>{
+      if(!file){resolve('');return;}
+      const url=URL.createObjectURL(file);
+      const img=new Image();
+      img.onload=()=>{
+        try{
+          const ow=img.naturalWidth||img.width, oh=img.naturalHeight||img.height;
+          const scale=Math.min(1,maxEdge/Math.max(ow,oh));
+          const w=Math.max(1,Math.round(ow*scale));
+          const h=Math.max(1,Math.round(oh*scale));
+          const c=document.createElement('canvas');
+          c.width=w;c.height=h;
+          const cx=c.getContext('2d',{alpha:false});
+          cx.drawImage(img,0,0,w,h);
+          URL.revokeObjectURL(url);
+          resolve(c.toDataURL('image/jpeg',quality));
+        }catch(err){URL.revokeObjectURL(url);reject(err);}
+      };
+      img.onerror=()=>{URL.revokeObjectURL(url);reject(new Error('학습용 사진 변환 실패'));};
+      img.src=url;
+    });
+  }
+
+  async function buildFinalLearningPayload(){
+    if(!photoFiles.length) return null;
+
+    const envSelect=document.getElementById('ai-work-environment');
+    const environment=String(envSelect?.value || window.__riskAiLastDecision?.environment || '').trim();
+
+    const selected_items=allowedItems()
+      .filter(x=>x.currently_checked)
+      .map(x=>({value:x.value,label:x.label,category:x.category,role:x.role}));
+
+    const images=[];
+    for(const f of photoFiles.slice(0,3)){
+      try{
+        const data=await trainingImageDataURL(f);
+        if(data) images.push(data);
+      }catch(e){}
+    }
+
+    const facts=(Array.isArray(window.__riskAiLastDecision?.facts)?window.__riskAiLastDecision.facts:[])
+      .map(x=>String(x?.fact||'').replace(/\s+/g,' ').trim())
+      .filter(Boolean)
+      .slice(0,8);
+
+    return {
+      environment,
+      images,
+      facts,
+      selected_items,
+      additional_risk:String(document.getElementById('danger_ect_point')?.value||'').trim(),
+      countermeasure:String(document.getElementById('danger_ect_todo')?.value||'').trim(),
+      weather:{
+        temperature:String(document.getElementById('real_temperature')?.value||''),
+        apparent_temperature:String(document.getElementById('fake_temperature')?.value||'')
+      },
+      saved_at:new Date().toISOString()
+    };
+  }
+
+  window.__riskAiLearnOnSave = async function(){
+    const payload=await buildFinalLearningPayload();
+    if(!payload){
+      setLearningSaveStatus('사진이 없어 AI 학습사례는 저장하지 않았습니다.');
+      return {ok:false,skipped:true};
+    }
+
+    setLearningSaveStatus('최종 수정 내용을 공유 AI 학습사례로 저장 중입니다…');
+
+    const res=await fetch('/.netlify/functions/learn',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(payload)
+    });
+    const data=await res.json().catch(()=>({}));
+    if(!res.ok || !data?.ok) throw new Error(data?.error||`학습 저장 오류 (${res.status})`);
+
+    setLearningSaveStatus(
+      data.duplicate
+        ? '동일한 최종 학습사례가 이미 저장되어 있습니다.'
+        : '✓ 최종 수정 내용이 공유 AI 학습사례로 저장되었습니다.',
+      !data.duplicate
+    );
+    refreshSharedLearningCount();
+    return data;
+  };
+
+  refreshSharedLearningCount();
+
   document.getElementById('ai-import-btn').addEventListener('click',function(){
     try{
       const data=parseJSON(resultText.value);
@@ -1873,11 +2050,14 @@ ${JSON.stringify(items,null,2)}
       // 핵심 안전장치:
       // - selected라도 신뢰도 80 미만은 자동 체크 금지
       // - reason/evidence가 비어 있으면 자동 체크 금지
-      const auto=uniqueByValue(selected.filter(x=>x.confidence>=80 && x.reason.length>=8));
+      const auto=uniqueByValue(selected.filter(
+        x=>x.confidence>=80 && isStrongVisualReason(x.reason)
+      ));
+      const autoValues=new Set(auto.map(x=>x.value));
       const reviewFinal=uniqueByValue([
-        ...selected.filter(x=>x.confidence<80),
+        ...selected.filter(x=>!autoValues.has(x.value)),
         ...review
-      ]).filter(x=>x.confidence>=50 && x.confidence<80);
+      ]).filter(x=>x.confidence>=50 && x.confidence<100 && !autoValues.has(x.value));
 
       auto.forEach(x=>{
         const cb=findCheckbox(x.value);
@@ -1893,6 +2073,18 @@ ${JSON.stringify(items,null,2)}
       const workEnvironment=classifyWorkEnvironment(data);
       const shortRisk=normalizeAdditionalRisk(data.summary,auto,allowedMap);
       const shortTodo=matchedCountermeasure(shortRisk,sanitizeAiPhrase(data.guidance));
+
+      const envSelect=document.getElementById('ai-work-environment');
+      if(envSelect && workEnvironment) envSelect.value=workEnvironment;
+
+      window.__riskAiLastDecision={
+        environment:workEnvironment,
+        facts:Array.isArray(data.facts)?data.facts:[],
+        selected_values:auto.map(x=>x.value),
+        review_values:reviewFinal.map(x=>x.value),
+        additional_risk:shortRisk,
+        countermeasure:shortTodo
+      };
       const riskField=document.getElementById('danger_ect_point');
       const todoField=document.getElementById('danger_ect_todo');
 
@@ -1938,7 +2130,11 @@ ${JSON.stringify(items,null,2)}
   });
 
   document.getElementById('ai-clear-btn').addEventListener('click',function(){
-    resultText.value=''; resultBox.style.display='none'; photoFiles=[]; renderPhotos(); updateStatus();
+    resultText.value=''; resultBox.style.display='none'; photoFiles=[];
+    window.__riskAiLastDecision=null;
+    const envSelect=document.getElementById('ai-work-environment');
+    if(envSelect) envSelect.value='';
+    renderPhotos(); updateStatus();
   });
 
   // 현장 입력값이 바뀐 뒤 분석할 때 최신 상태를 반영하도록 버튼 상태만 갱신합니다.
