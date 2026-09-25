@@ -22,6 +22,43 @@ function clean(v, max = 500) {
   return String(v ?? "").replace(/\s+/g, " ").trim().slice(0, max);
 }
 
+function limitTen(v) {
+  return Array.from(clean(v, 100)).slice(0, 10).join("").trim();
+}
+
+function isBannedMetaSentence(v) {
+  const s = clean(v, 600);
+  if (!s) return false;
+
+  return [
+    /사진\s*만으로/i,
+    /사진\s*상.*판단/i,
+    /판단(?:이|하기)?\s*어렵/i,
+    /판단(?:할)?\s*수\s*없/i,
+    /판단\s*불가/i,
+    /보호구\s*착용\s*여부/i,
+    /개인보호구\s*착용\s*여부/i,
+    /구체적(?:인)?\s*작업\s*방법/i,
+    /작업\s*방법.*판단/i,
+    /작업자\s*행동.*판단/i,
+    /실제\s*작업\s*진행\s*여부/i,
+    /안전대\s*체결\s*상태.*판단/i,
+    /체결\s*상태.*확인/i,
+    /현장\s*재확인/i,
+    /재확인\s*필요/i,
+    /현장\s*확인\s*필요/i,
+    /최종\s*확인\s*필요/i,
+    /확인되지\s*않/i,
+    /확인이\s*어렵/i
+  ].some(rx => rx.test(s));
+}
+
+function sanitizeOutputSentence(v, max = 500) {
+  const s = clean(v, max);
+  if (!s || isBannedMetaSentence(s)) return "";
+  return s;
+}
+
 function parseImage(dataUrl) {
   const m = String(dataUrl || "").match(/^data:(image\/[a-zA-Z0-9.+-]+);base64,(.+)$/s);
   if (!m) return null;
@@ -73,9 +110,10 @@ function parseModelJson(text) {
 }
 
 function uncertain(s) {
-  return /(가능성|추정|의심|일\s*수|수\s*있|보일\s*수|어려움|판단\s*불가|확인\s*필요|재확인|확인되지\s*않)/i.test(
-    clean(s, 500)
-  );
+  return isBannedMetaSentence(s) ||
+    /(가능성|추정|의심|일\s*수|수\s*있|보일\s*수|어려움|판단\s*불가|확인\s*필요|재확인|확인되지\s*않)/i.test(
+      clean(s, 500)
+    );
 }
 
 function strongReason(reason) {
@@ -97,32 +135,32 @@ function sanitizeSummary(v) {
   if (neutral.test(s) && !hazard.test(s)) return "";
   if (!hazard.test(s)) return "";
 
-  return Array.from(s).slice(0, 20).join("");
+  return limitTen(s);
 }
 
 function deterministicCountermeasure(risk, modelGuidance) {
   const r = clean(risk, 80);
   if (!r) return "";
 
-  if (/감전|전기|누전|활선|전선/i.test(r)) return "누전검진기 확인후 작업 진행";
-  if (/차량|교통|주행|충돌/i.test(r)) return "신호수 배치후 작업 진행";
-  if (/사다리/i.test(r)) return "사다리 고정후 작업 진행";
-  if (/추락|떨어짐|고소|가장자리/i.test(r)) return "안전대 체결후 작업 진행";
-  if (/낙하|비래/i.test(r)) return "공구 결속후 작업 진행";
-  if (/화재|폭발|불꽃|인화/i.test(r)) return "소화기 비치후 작업 진행";
-  if (/끼임|협착/i.test(r)) return "접근 통제후 작업 진행";
-  if (/전도|넘어짐|미끄럼/i.test(r)) return "통로 정리후 작업 진행";
-  if (/건설장비|중장비|굴삭기|크레인/i.test(r)) return "작업반경 통제후 작업 진행";
-  if (/질식|산소|유해\s*가스/i.test(r)) return "환기 확인후 작업 진행";
-  if (/낙석|붕괴/i.test(r)) return "낙석구간 통제후 작업 진행";
-  if (/낙뢰/i.test(r)) return "기상 확인후 작업 진행";
+  if (/감전|전기|누전|활선|전선/i.test(r)) return "누전검진기 확인";
+  if (/차량|교통|주행|충돌/i.test(r)) return "신호수 배치";
+  if (/사다리/i.test(r)) return "사다리 고정";
+  if (/추락|떨어짐|고소|가장자리/i.test(r)) return "안전대 체결";
+  if (/낙하|비래/i.test(r)) return "공구 결속";
+  if (/화재|폭발|불꽃|인화/i.test(r)) return "소화기 비치";
+  if (/끼임|협착/i.test(r)) return "접근 통제";
+  if (/전도|넘어짐|미끄럼/i.test(r)) return "통로 정리";
+  if (/건설장비|중장비|굴삭기|크레인/i.test(r)) return "작업반경 통제";
+  if (/질식|산소|유해\s*가스/i.test(r)) return "환기 확인";
+  if (/낙석|붕괴/i.test(r)) return "낙석구간 통제";
+  if (/낙뢰/i.test(r)) return "기상 확인";
 
   let g = clean(modelGuidance, 80)
     .replace(/^(대책|안전\s*조치|안전조치)\s*[:：-]?\s*/i, "");
 
   if (uncertain(g)) g = "";
 
-  return Array.from(g || "안전조치후 작업 진행").slice(0, 30).join("");
+  return limitTen(g || "안전조치");
 }
 
 function sanitizeResult(raw, allowed) {
@@ -141,10 +179,13 @@ function sanitizeResult(raw, allowed) {
       if (!allowedMap.has(value) || seen.has(value)) continue;
       seen.add(value);
 
+      const reason = sanitizeOutputSentence(x.reason, 500);
+      if (!reason) continue;
+
       out.push({
         value,
         confidence: Math.max(0, Math.min(100, Number(x.confidence) || 0)),
-        reason: clean(x.reason, 500)
+        reason
       });
     }
 
@@ -188,7 +229,7 @@ function sanitizeResult(raw, allowed) {
     ? raw.facts
         .map((x, i) => ({
           photo: Math.max(1, Number(x?.photo) || i + 1),
-          fact: clean(x?.fact, 240)
+          fact: sanitizeOutputSentence(x?.fact, 240)
         }))
         .filter(x => x.fact)
         .slice(0, 12)
@@ -197,8 +238,11 @@ function sanitizeResult(raw, allowed) {
   const environmentRaw = clean(raw?.environment, 20);
   const environment = ENV_SET.has(environmentRaw) ? environmentRaw : "";
 
-  const summary = sanitizeSummary(raw?.summary);
-  const guidance = deterministicCountermeasure(summary, raw?.guidance);
+  const summary = sanitizeSummary(sanitizeOutputSentence(raw?.summary, 80));
+  const guidance = deterministicCountermeasure(
+    summary,
+    sanitizeOutputSentence(raw?.guidance, 80)
+  );
 
   return {
     ok: true,
@@ -207,8 +251,8 @@ function sanitizeResult(raw, allowed) {
     selected_values,
     review_values: finalReview,
     excluded_values: [],
-    summary,
-    guidance,
+    summary: limitTen(summary),
+    guidance: limitTen(guidance),
     overall_confidence: Math.max(0, Math.min(100, Number(raw?.overall_confidence) || 0))
   };
 }
@@ -252,8 +296,8 @@ function learningProfileText(profiles) {
         environment: p.env,
         selected_values: Array.isArray(x.selected_values) ? x.selected_values : [],
         selected_labels: Array.isArray(x.selected_labels) ? x.selected_labels : [],
-        additional_risk: clean(x.additional_risk, 80),
-        countermeasure: clean(x.countermeasure, 100)
+        additional_risk: Array.from(clean(x.additional_risk, 80)).slice(0,10).join(''),
+        countermeasure: Array.from(clean(x.countermeasure, 100)).slice(0,10).join('')
       });
     }
   }
@@ -341,12 +385,13 @@ export const handler = async (event) => {
 6. 추정/가능성 수준이면 review_values에 confidence 50~79로 반환하세요.
 7. reason에는 반드시 "사진 N"과 구체적으로 보이는 근거를 적으세요.
 8. 사진에 없는 전원차단, 접지, 장비고정, 신호수, 안전조치 시행 여부는 단정하지 마세요.
-9. summary는 실제 '추가 위험요인'만 20자 이내로 작성하세요.
+9. summary는 실제 '추가 위험요인'만 10자 이내로 작성하세요.
 10. summary에 날씨, 현장 설명, PPE 정상착용 사실을 넣지 마세요. 실제 추가위험이 없으면 빈 문자열입니다.
-11. guidance는 summary 위험에 직접 대응하는 짧은 작업지시형 대책만 작성하세요.
-12. special_note는 절대 출력하지 마세요. 현장 특이사항은 별도 온도 로직이 관리합니다.
-13. "사진만으로 판단하기 어려움", "현장 재확인 필요", "확인되지 않음" 같은 상투문구는 어떤 필드에도 넣지 마세요.
-14. allowed_items 밖의 value는 절대 만들지 마세요.
+11. guidance는 summary 위험에 직접 대응하는 대책만 10자 이내로 작성하세요.
+12. special_note는 절대 출력하지 말고, 현장 특이사항을 생성·수정·추가·덮어쓰기 하지 마세요. 현장 특이사항은 별도 온도 로직만 관리합니다.
+13. 사진으로 확인할 수 없는 보호구 착용 여부, 구체적인 작업 방법, 실제 작업 진행 여부를 설명하는 문장은 어떤 필드에도 작성하지 마세요.
+14. 판단 근거가 부족하면 "판단 어려움", "현장 재확인 필요", "확인되지 않음" 같은 문장을 만들지 말고 해당 항목 자체를 생략하세요.
+15. allowed_items 밖의 value는 절대 만들지 마세요.
 
 [공유 학습사례의 의미]
 아래 학습사례는 현장 작업자가 사진을 등록한 뒤 실제 현장에 맞게 체크항목/추가위험/대책을 직접 수정하고 "이미지 저장"을 눌러 확정한 최종 정답 사례입니다.
@@ -375,8 +420,8 @@ ${JSON.stringify(allowed)}
   "review_values":[
     {"value":"허용 value","confidence":65,"reason":"사진 1 ...은 보이나 핵심 조건은 명확하지 않음"}
   ],
-  "summary":"실제 추가 위험요인 또는 빈 문자열",
-  "guidance":"summary에 직접 대응하는 대책 또는 빈 문자열",
+  "summary":"실제 추가 위험요인 10자 이내 또는 빈 문자열",
+  "guidance":"summary에 직접 대응하는 대책 10자 이내 또는 빈 문자열",
   "overall_confidence":85
 }
 반드시 JSON 객체 하나만 반환하세요.
@@ -408,8 +453,8 @@ ${JSON.stringify(allowed)}
         `\n[사람이 확정한 참고사진 사례]\n` +
         `환경=${ex.env}\n` +
         `최종 체크=${JSON.stringify(labels)}\n` +
-        `추가 위험=${clean(ex.additional_risk, 80) || "(없음)"}\n` +
-        `대책=${clean(ex.countermeasure, 100) || "(없음)"}\n` +
+        `추가 위험=${Array.from(clean(ex.additional_risk, 80)).slice(0,10).join('') || "(없음)"}\n` +
+        `대책=${Array.from(clean(ex.countermeasure, 100)).slice(0,10).join('') || "(없음)"}\n` +
         `아래 이미지는 위 최종값과 연결된 과거 참고사진입니다. 현재 사진 판단의 보조자료로만 사용하세요.`
     });
 

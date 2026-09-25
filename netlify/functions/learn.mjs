@@ -19,6 +19,10 @@ function clean(v, max = 300) {
   return String(v ?? "").replace(/\s+/g, " ").trim().slice(0, max);
 }
 
+function limitTen(v) {
+  return Array.from(clean(v, 100)).slice(0, 10).join("").trim();
+}
+
 function safeImage(v) {
   const s = String(v || "");
   if (!/^data:image\/jpeg;base64,/i.test(s)) return "";
@@ -133,8 +137,8 @@ export const handler = async (event) => {
     images,
     facts,
     selected_items,
-    additional_risk: clean(body.additional_risk, 80),
-    countermeasure: clean(body.countermeasure, 100),
+    additional_risk: limitTen(body.additional_risk),
+    countermeasure: limitTen(body.countermeasure),
     weather: {
       temperature: clean(body?.weather?.temperature, 20),
       apparent_temperature: clean(body?.weather?.apparent_temperature, 20)
