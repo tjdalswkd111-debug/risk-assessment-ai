@@ -1441,7 +1441,7 @@ function showInstallGuide() {
 3. 사진에 보이지 않는 작업방법, 작업자 행동, 보호구 착용 여부, 전원 차단 여부, 접지 여부, 장비 고정상태, 신호수 배치 여부, 안전조치의 실제 시행 여부 등은 사실처럼 단정하지 마세요.
 4. '위험이 있을 수 있음'과 '사진에서 위험이 확인됨'을 구분하세요. 단순히 가능성이 있다는 이유만으로 80% 이상을 주지 마세요.
 5. 각 selected/review 항목에는 반드시 사진 번호와 구체적인 시각 근거를 reason에 적으세요. 예: '사진 2 우측 상단에서 전선과 작업위치가 근접해 보임'.
-6. 사진으로 확인하기 어려운 항목은 selected_values가 아니라 review_values에 넣으세요.
+6. 사진에서 직접 뒷받침되지 않는 항목은 selected/review 어디에도 넣지 말고 생략하세요. 보이지 않는 보호구 착용 여부나 작업방법을 설명하는 문장도 작성하지 마세요.
 7. 80~100%는 사진에서 직접적이고 명확한 근거가 있는 경우에만 부여하세요.
 8. 50~79%는 적용 가능성은 있으나 핵심 조건이 사진에서 확인되지 않는 경우에 사용하세요.
 9. 0~49%는 일반적인 가능성 또는 근거 부족입니다. selected/review 어느 쪽에도 넣지 말고 excluded_values에 넣거나 생략하세요.
@@ -1475,14 +1475,15 @@ function showInstallGuide() {
 - 금지 예: "맑은 날씨", "옥탑 통신 설비 구역", "안전모·안전조끼·안전화 착용 확인", "작업 전 상태 확인"
 - 허용 예: "작업중 감전 위험", "옥탑 가장자리 추락 위험", "주행차량 충돌 위험", "낙하물 위험"
 - 실제 추가 위험요인이 명확하지 않으면 summary와 guidance를 빈 문자열("")로 반환하세요.
-22. 아래와 같은 재확인/판단불가 상투문구는 summary, guidance, reason, facts 등 어떤 출력 필드에도 절대 작성하지 마세요.
-- "사진만으로 판단하기 어려움"
-- "실제 작업 진행 여부는 판단하기 어려움"
-- "안전대 체결 상태는 판단하기 어려움"
-- "현장 재확인 필요"
-- "최종 확인 필요"
-- "확인되지 않음"
-사진에서 직접 확인되는 위험과 그에 대한 구체적인 대책만 짧게 작성하세요.
+22. 아래 유형의 문장은 summary, guidance, reason, facts 등 어떤 출력 필드에도 절대 작성하지 마세요.
+- 사진만으로 판단이 어렵다는 설명
+- 보호구 착용 여부를 판단하기 어렵다는 설명
+- 구체적인 작업 방법을 판단하기 어렵다는 설명
+- 실제 작업 진행 여부를 판단하기 어렵다는 설명
+- 현장 재확인/최종 확인이 필요하다는 설명
+- 확인되지 않음/판단 불가/추정/가능성 같은 메타 설명
+판단 근거가 부족하면 설명문을 만들지 말고 해당 항목 자체를 생략하세요.
+출력에는 사진에서 직접 확인되는 객관적 사실, 실제 위험, 그 위험에 대한 간단한 대책만 작성하세요.
 대표 위험 예시는 감전, 추락, 낙하물, 차량충돌, 끼임/협착, 화재·폭발, 미끄럼/넘어짐, 장비충돌 등입니다.
 보호구를 정상 착용하고 있다는 사실은 '위험요인'이 아니라 '확인된 사실'로만 취급하세요.
 23. 서버가 제공하는 공유 학습사례는 작업자가 사진을 등록한 뒤 실제 현장에 맞게 체크항목/추가위험/대책을 수정하고 '이미지 저장'을 눌러 확정한 최종값입니다.
@@ -1767,15 +1768,26 @@ ${JSON.stringify(items,null,2)}
     if(!s) return '';
 
     const banned=[
-      /사진만으로/i,
-      /판단(?:하기)?\s*어렵/i,
-      /판단할\s*수\s*없/i,
+      /사진\s*만으로/i,
+      /사진\s*상.*판단/i,
+      /판단(?:이|하기)?\s*어렵/i,
+      /판단(?:할)?\s*수\s*없/i,
+      /판단\s*불가/i,
+      /보호구\s*착용\s*여부/i,
+      /개인보호구\s*착용\s*여부/i,
+      /구체적(?:인)?\s*작업\s*방법/i,
+      /작업\s*방법.*판단/i,
+      /작업자\s*행동.*판단/i,
+      /실제\s*작업\s*진행\s*여부/i,
+      /안전대\s*체결\s*상태.*판단/i,
+      /체결\s*상태.*확인/i,
       /현장\s*재확인/i,
       /재확인\s*필요/i,
+      /현장\s*확인\s*필요/i,
       /최종\s*확인\s*필요/i,
-      /실제\s*작업\s*진행\s*여부/i,
-      /체결\s*상태.*확인/i,
-      /확인되지\s*않/i
+      /확인되지\s*않/i,
+      /확인이\s*어렵/i,
+      /추정(?:됨|할\s*수)?/i
     ];
 
     // 문장 단위로 금지 문구가 들어간 부분을 통째로 제거
@@ -1805,11 +1817,13 @@ ${JSON.stringify(items,null,2)}
         if(!item || typeof item!=='object') return item;
         const copy={...item};
         if(typeof copy.fact==='string') copy.fact=sanitizeAiPhrase(copy.fact);
-        if(typeof copy.reason==='string'){
-          const cleaned=sanitizeAiPhrase(copy.reason);
-          copy.reason=cleaned || '사진 근거 기준 검토';
-        }
+        if(typeof copy.reason==='string') copy.reason=sanitizeAiPhrase(copy.reason);
         return copy;
+      }).filter(item=>{
+        if(!item || typeof item!=='object') return false;
+        if(key==='facts') return !!String(item.fact||'').trim();
+        if(key==='selected_values' || key==='review_values') return !!String(item.reason||'').trim();
+        return true;
       });
     }
     return data;
@@ -2110,7 +2124,7 @@ ${JSON.stringify(items,null,2)}
       }).join('');
       const revHtml=reviewFinal.map(x=>{
         const it=allowedMap.get(x.value);
-        return `<li><b>${esc(it?.label||x.value)}</b> — ${x.confidence}%<br><span class="ai-warn">${esc(x.reason||'현장 확인 필요')}</span></li>`;
+        return `<li><b>${esc(it?.label||x.value)}</b> — ${x.confidence}%<br><span class="ai-warn">${esc(x.reason||'')}</span></li>`;
       }).join('');
       const facts=Array.isArray(data.facts)?data.facts.map(f=>`<li>사진 ${esc(f.photo||'?')}: ${esc(f.fact||'')}</li>`).join(''):'';
 
@@ -2120,7 +2134,7 @@ ${JSON.stringify(items,null,2)}
         ${workEnvironment?`<br><br><b>🏗️ 작업환경</b><br>${esc(workEnvironment)}`:''}
         ${facts?`<br><br><b>📷 확인된 사실</b><ul>${facts}</ul>`:''}
         <br><b>🟢 자동 체크된 항목</b><ul>${autoHtml||'<li>없음</li>'}</ul>
-        ${reviewFinal.length?`<b>🟠 현장 확인 후 체크할 후보</b><ul>${revHtml}</ul>`:''}
+        ${reviewFinal.length?`<b>🟠 검토 후보</b><ul>${revHtml}</ul>`:''}
         <br><b>추가 위험요인</b><br>${esc(shortRisk||'없음')}
         <br><br><b>추가 위험요인에 대한 대책</b><br>${esc(shortTodo||'없음')}
         `;
