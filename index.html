@@ -565,7 +565,7 @@ body{-webkit-tap-highlight-color:transparent}
   <div id="site_site_etc_wrap" class="etc-input">
       <input type="text" id="site_site_ect_text" placeholder="기타 항목 입력" oninput="generateImage()">
   </div>
-  <label style="margin-top: 10px;">[현장 특이 사항] <span style="font-size:10px;color:#7ddfff;font-weight:900">온도 자동반영 · AI 미개입</span>
+  <label style="margin-top: 10px;">[현장 특이 사항] <span style="font-size:10px;color:#7ddfff;font-weight:900">온도 자동반영 · AI 입력 차단</span>
       <input type="text" id="special_note" value="팀장과 온열질환 예방조치 확인 후 진행" placeholder="현장 특이 사항을 입력하세요" oninput="generateImage()">
   </label>
 </details>
@@ -1391,8 +1391,16 @@ function showInstallGuide() {
 13. 현재 이미 체크된 항목은 참고만 하며, 사진 근거가 없다고 해서 기존 체크를 해제하라고 하지 마세요.
 14. 새로운 value, 임의의 항목명, 비슷한 표현을 만들어내지 마세요. 반드시 아래 목록의 value를 그대로 사용하세요.
 15. 최종 결과는 보조판단이며 실제 현장 확인이 필요합니다.
-16. 현재 작업/현장 입력값의 weather는 기상청 실황 기반 정보입니다. 기온과 체감온도는 위험요인 및 대책 판단에만 참고하세요. 현장 특이사항은 사용자가 직접 입력하므로 AI가 작성하거나 수정하지 마세요.
+16. 현재 작업/현장 입력값의 weather는 기상청 실황 기반 정보입니다. 기온과 체감온도는 위험요인 및 대책 판단에만 참고하세요. 현장 특이사항(special_note)은 온도 로직 전용이므로 AI 출력 대상에서 완전히 제외하세요.
 17. assessment_datetime은 AI 분석 버튼을 누른 시점의 실시간 일시입니다. 현장 기록의 기준 시각으로 사용하세요.
+18. summary와 guidance는 반드시 1:1 대응해야 합니다. guidance는 summary에 적은 추가 위험요인을 바로 줄이는 현장 조치만 작성하세요.
+19. 대책은 짧은 작업지시형 문장으로 작성하세요. 예:
+- 작업중 감전 위험 → 누전검진기 확인후 작업 진행
+- 차량 충돌 위험 → 신호수 배치후 작업 진행
+- 추락 위험 → 안전대 체결후 작업 진행
+- 낙하물 위험 → 공구 결속후 작업 진행
+- 화재 위험 → 소화기 비치후 작업 진행
+일반론, 재확인 멘트, 설명문은 guidance에 넣지 마세요.
 
 [현재 작업/현장 입력값]
 ${JSON.stringify(context,null,2)}
@@ -1416,8 +1424,7 @@ ${JSON.stringify(items,null,2)}
     {"value":"allowed value","reason":"사진상 해당 위험을 뒷받침하는 근거가 없음"}
   ],
   "summary":"추가 위험요인을 20자 이내로 간략히 작성",
-  "guidance":"summary의 추가 위험요인에 직접 대응하는 대책을 10자 이내로 매우 간략히 작성",
-  "special_note":"",
+  "guidance":"summary의 추가 위험요인에 직접 대응하는 짧은 작업지시형 대책. 예: 누전검진기 확인후 작업 진행",
   "overall_confidence":82
 }`;
   }
@@ -1525,6 +1532,9 @@ ${JSON.stringify(items,null,2)}
       setAiProgress(24,'기상청 실황 확인','현재 위치의 기온과 체감온도를 불러오고 있습니다.');
       const weatherNow = await setWeatherAndTemperature({forceRefresh:true, forAI:true});
 
+      // 현장 특이사항은 기온/체감온도 로직만 사용
+      if(typeof updateSpecialNoteByTemp==='function') updateSpecialNoteByTemp();
+
       if(weatherNow?.ok){
         status.textContent=`🌡️ 기온 ${weatherNow.temperature}°C · 체감 ${weatherNow.apparent_temperature}°C 확인 완료
 ⏳ 사진 최적화 → AI 위험 분석 중...`;
@@ -1556,6 +1566,12 @@ ${JSON.stringify(items,null,2)}
       if(!data || (!Array.isArray(data.selected_values) && !Array.isArray(data.review_values))) {
         throw new Error('AI 분석 결과가 비어 있습니다.');
       }
+
+      // 서버/AI가 special_note를 반환하더라도 클라이언트에서 완전히 제거
+      if(data && Object.prototype.hasOwnProperty.call(data,'special_note')){
+        delete data.special_note;
+      }
+
       resultText.value=JSON.stringify(data,null,2);
       resultText.dispatchEvent(new Event('input',{bubbles:true}));
       setAiProgress(93,'평가표 자동 반영','80% 이상 항목과 안전안내를 평가표에 적용하고 있습니다.');
@@ -1647,6 +1663,32 @@ ${JSON.stringify(items,null,2)}
     return v;
   }
 
+  function matchedCountermeasure(risk, aiGuidance){
+    const r=String(risk||'').replace(/\s+/g,' ').trim();
+
+    // 추가 위험요인과 직접 대응하는 대표 작업지시 문구
+    if(/감전|전기|누전|활선|전선/.test(r)) return '누전검진기 확인후 작업 진행';
+    if(/차량|교통|주행|충돌/.test(r)) return '신호수 배치후 작업 진행';
+    if(/추락|떨어짐|고소/.test(r)) return '안전대 체결후 작업 진행';
+    if(/사다리/.test(r)) return '사다리 고정후 작업 진행';
+    if(/낙하|비래|공구.*떨어/.test(r)) return '공구 결속후 작업 진행';
+    if(/화재|폭발|불꽃|인화/.test(r)) return '소화기 비치후 작업 진행';
+    if(/끼임|협착/.test(r)) return '접근 통제후 작업 진행';
+    if(/전도|넘어짐|미끄럼/.test(r)) return '통로 정리후 작업 진행';
+    if(/건설장비|중장비|굴삭기|크레인/.test(r)) return '작업반경 통제후 작업 진행';
+
+    // 그 외에는 AI가 만든 직접 대책을 사용하되 장황한 설명은 제거
+    let g=String(aiGuidance||'')
+      .replace(/\s+/g,' ')
+      .replace(/^(대책|안전\s*조치|안전조치)\s*[:：\-]?\s*/i,'')
+      .replace(/현장\s*재확인\s*필요/gi,'')
+      .trim();
+
+    // 자연스러운 작업지시 문장을 유지하기 위해 최대 20자
+    if(g.length>20) g=g.slice(0,20).replace(/[\s,./·\-]+$/,'');
+    return g;
+  }
+
   document.getElementById('ai-import-btn').addEventListener('click',function(){
     try{
       const data=parseJSON(resultText.value);
@@ -1678,9 +1720,13 @@ ${JSON.stringify(items,null,2)}
       // 기존 체크는 유지하고, AI가 판단하지 못한 기존 체크를 해제하지 않습니다.
       // 현장 특이사항은 사용자가 직접 입력하며 AI는 절대 수정하지 않습니다.
       const shortRisk=compactRiskText(data.summary,20);
-      const shortTodo=compactRiskText(data.guidance,10);
+      const shortTodo=matchedCountermeasure(shortRisk,data.guidance);
       applyTextValue('danger_ect_point',shortRisk,false);
       applyTextValue('danger_ect_todo',shortTodo,false);
+
+      // AI 결과가 어떤 내용을 반환하더라도 현장 특이사항은 온도 로직 값으로 즉시 복원
+      if(typeof updateSpecialNoteByTemp==='function') updateSpecialNoteByTemp();
+
       if(typeof generateImage==='function') generateImage();
 
       const autoHtml=auto.map(x=>{
@@ -1700,7 +1746,7 @@ ${JSON.stringify(items,null,2)}
         <br><b>🟢 자동 체크된 항목</b><ul>${autoHtml||'<li>없음</li>'}</ul>
         ${reviewFinal.length?`<b>🟠 현장 확인 후 체크할 후보</b><ul>${revHtml}</ul>`:''}
         <br><b>추가 위험요인</b><br>${esc(shortRisk||'없음')}
-        <br><br><b>추가 위험요인 대책</b><br>${esc(shortTodo||'없음')}
+        <br><br><b>추가 위험요인에 대한 대책</b><br>${esc(shortTodo||'없음')}
         <br><br><span class="ai-muted">AI는 사진으로 확인 가능한 정보만 판단했습니다. 최종 체크는 실제 현장에서 재확인하세요.</span>`;
       status.textContent=`✅ ${auto.length}개 자동 체크 · ${reviewFinal.length}개 검토 후보. 기존 사용자가 체크한 항목은 유지했습니다.`;
     }catch(err){
